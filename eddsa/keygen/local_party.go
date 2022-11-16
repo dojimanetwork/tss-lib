@@ -11,10 +11,10 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/v1/common"
-	cmt "github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // Implements Party

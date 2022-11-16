@@ -7,7 +7,7 @@
 package test
 
 import (
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func SharedPartyUpdater(party tss.Party, msg tss.Message, errCh chan<- *tss.Error) {

@@ -12,8 +12,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/dojimanetwork/tss-lib/v1/common"
-	"github.com/dojimanetwork/tss-lib/v1/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto/paillier"
 )
 
 const (

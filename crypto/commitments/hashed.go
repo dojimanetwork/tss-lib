@@ -12,7 +12,7 @@ package commitments
 import (
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/common"
 )
 
 const (

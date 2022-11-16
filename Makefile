@@ -1,4 +1,4 @@
-MODULE = github.com/dojimanetwork/tss-lib/v1
+MODULE = github.com/dojimanetwork/tss-lib
 PACKAGES = $(shell go list ./... | grep -v '/vendor/')
 
 all: protob test

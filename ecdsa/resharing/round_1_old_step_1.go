@@ -10,12 +10,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/dojimanetwork/tss-lib/v1/crypto"
-	"github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/v1/ecdsa/keygen"
-	"github.com/dojimanetwork/tss-lib/v1/ecdsa/signing"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/ecdsa/signing"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // round 1 represents round 1 of the keygen part of the GG18 ECDSA TSS spec (Gennaro, Goldfeder; 2018)

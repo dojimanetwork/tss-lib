@@ -19,11 +19,11 @@ import (
 	"github.com/ipfs/go-log"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dojimanetwork/tss-lib/v1/common"
-	"github.com/dojimanetwork/tss-lib/v1/crypto"
-	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/v1/test"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/test"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (

@@ -7,8 +7,8 @@
 package resharing
 
 import (
-	"github.com/dojimanetwork/tss-lib/v1/ecdsa/keygen"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (

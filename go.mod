@@ -1,4 +1,4 @@
-module github.com/dojimanetwork/tss-lib/v1
+module github.com/dojimanetwork/tss-lib
 
 go 1.17
 

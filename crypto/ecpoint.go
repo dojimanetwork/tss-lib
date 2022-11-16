@@ -20,8 +20,8 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/decred/dcrd/dcrec/edwards/v2"
 
-	"github.com/dojimanetwork/tss-lib/v1/common"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // ECPoint represents a point on an elliptic curve in affine form. It is designed to be immutable

@@ -12,8 +12,8 @@ import (
 
 	errorspkg "github.com/pkg/errors"
 
-	"github.com/dojimanetwork/tss-lib/v1/crypto/mta"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/crypto/mta"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round2) Start() *tss.Error {

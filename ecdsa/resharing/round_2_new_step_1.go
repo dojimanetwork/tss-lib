@@ -9,9 +9,9 @@ package resharing
 import (
 	"errors"
 
-	"github.com/dojimanetwork/tss-lib/v1/crypto/dlnp"
-	"github.com/dojimanetwork/tss-lib/v1/ecdsa/keygen"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round2) Start() *tss.Error {

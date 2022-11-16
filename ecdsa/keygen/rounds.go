@@ -7,7 +7,7 @@
 package keygen
 
 import (
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (

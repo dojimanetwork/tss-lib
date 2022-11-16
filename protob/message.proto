@@ -6,7 +6,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/dojimanetwork/tss-lib/v1/tss";
+option go_package = "github.com/dojimanetwork/tss-lib/tss";
 
 import "google/protobuf/any.proto";
 

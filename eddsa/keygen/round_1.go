@@ -10,11 +10,11 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/v1/common"
-	"github.com/dojimanetwork/tss-lib/v1/crypto"
-	cmts "github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmts "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 var (

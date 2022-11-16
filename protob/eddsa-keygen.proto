@@ -6,7 +6,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/dojimanetwork/tss-lib/v1/eddsa/keygen";
+option go_package = "github.com/dojimanetwork/tss-lib/eddsa/keygen";
 
 import "protob/shared.proto";
 

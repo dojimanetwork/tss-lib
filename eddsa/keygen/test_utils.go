@@ -17,8 +17,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dojimanetwork/tss-lib/v1/test"
-	"github.com/dojimanetwork/tss-lib/v1/tss"
+	"github.com/dojimanetwork/tss-lib/test"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (
