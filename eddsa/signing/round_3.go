@@ -12,9 +12,9 @@ import (
 	"github.com/agl/ed25519/edwards25519"
 	"github.com/pkg/errors"
 
-	"github.com/dojimanetwork/tss-lib/crypto"
-	"github.com/dojimanetwork/tss-lib/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 func (round *round3) Start() *tss.Error {

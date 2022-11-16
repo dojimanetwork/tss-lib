@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/v1/common"
 )
 
 type Party interface {

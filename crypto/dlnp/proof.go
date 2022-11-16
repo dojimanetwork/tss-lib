@@ -15,8 +15,8 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	cmts "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	cmts "github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
 )
 
 const Iterations = 128

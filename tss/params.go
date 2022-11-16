@@ -10,7 +10,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/v1/common"
 )
 
 type (

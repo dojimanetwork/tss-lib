@@ -9,12 +9,12 @@ package keygen
 import (
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
-	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/crypto/zkp"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/zkp"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 // These messages were generated from Protocol Buffers definitions into eddsa-keygen.pb.go

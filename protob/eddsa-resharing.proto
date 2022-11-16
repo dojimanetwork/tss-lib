@@ -6,7 +6,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/dojimanetwork/tss-lib/eddsa/resharing";
+option go_package = "github.com/dojimanetwork/tss-lib/v1/eddsa/resharing";
 
 import "protob/shared.proto";
 

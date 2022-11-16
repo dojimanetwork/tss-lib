@@ -11,12 +11,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
-	"github.com/dojimanetwork/tss-lib/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/crypto/mta"
-	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/mta"
+	"github.com/dojimanetwork/tss-lib/v1/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 var (

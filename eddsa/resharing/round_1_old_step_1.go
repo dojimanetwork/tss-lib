@@ -10,12 +10,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/dojimanetwork/tss-lib/crypto"
-	"github.com/dojimanetwork/tss-lib/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/eddsa/keygen"
-	"github.com/dojimanetwork/tss-lib/eddsa/signing"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/v1/eddsa/keygen"
+	"github.com/dojimanetwork/tss-lib/v1/eddsa/signing"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 // round 1 represents round 1 of the keygen part of the EDDSA TSS spec

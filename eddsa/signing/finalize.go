@@ -14,8 +14,8 @@ import (
 	"github.com/agl/ed25519/edwards25519"
 	"github.com/decred/dcrd/dcrec/edwards/v2"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 func (round *finalization) Start() *tss.Error {

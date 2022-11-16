@@ -13,11 +13,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
-	"github.com/dojimanetwork/tss-lib/crypto/paillier"
-	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/v1/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 // Using a modulus length of 2048 is recommended in the GG18 spec

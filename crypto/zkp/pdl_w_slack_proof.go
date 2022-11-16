@@ -12,11 +12,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
-	cmts "github.com/dojimanetwork/tss-lib/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/crypto/paillier"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	cmts "github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 type (

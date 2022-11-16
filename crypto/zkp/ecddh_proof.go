@@ -4,8 +4,8 @@ import (
 	"crypto/elliptic"
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
 )
 
 type (

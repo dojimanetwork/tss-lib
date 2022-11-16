@@ -9,13 +9,13 @@ package resharing
 import (
 	"math/big"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
-	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
-	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
-	"github.com/dojimanetwork/tss-lib/crypto/paillier"
-	"github.com/dojimanetwork/tss-lib/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/v1/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 // These messages were generated from Protocol Buffers definitions into ecdsa-resharing.pb.go

@@ -20,13 +20,13 @@ import (
 	"github.com/ipfs/go-log"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	"github.com/dojimanetwork/tss-lib/crypto"
-	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
-	"github.com/dojimanetwork/tss-lib/crypto/paillier"
-	"github.com/dojimanetwork/tss-lib/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/test"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	"github.com/dojimanetwork/tss-lib/v1/crypto"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/v1/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/v1/test"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 const (

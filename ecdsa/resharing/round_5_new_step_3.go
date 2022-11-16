@@ -9,7 +9,7 @@ package resharing
 import (
 	"errors"
 
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 func (round *round5) Start() *tss.Error {

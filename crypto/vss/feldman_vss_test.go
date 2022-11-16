@@ -12,9 +12,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dojimanetwork/tss-lib/common"
-	. "github.com/dojimanetwork/tss-lib/crypto/vss"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/common"
+	. "github.com/dojimanetwork/tss-lib/v1/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 func TestCheckIndexesDup(t *testing.T) {

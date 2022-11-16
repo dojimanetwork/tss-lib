@@ -7,8 +7,8 @@
 package signing
 
 import (
-	"github.com/dojimanetwork/tss-lib/eddsa/keygen"
-	"github.com/dojimanetwork/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/v1/eddsa/keygen"
+	"github.com/dojimanetwork/tss-lib/v1/tss"
 )
 
 const (

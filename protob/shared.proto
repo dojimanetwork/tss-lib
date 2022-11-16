@@ -6,7 +6,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/dojimanetwork/tss-lib/common";
+option go_package = "github.com/dojimanetwork/tss-lib/v1/common";
 
 message ECPoint {
     bytes x = 1;
