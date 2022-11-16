@@ -13,6 +13,6 @@ import "protob/shared.proto";
 /*
  * State object for signatures, contains the final EdDSA signature.
  */
-message SignatureData {
+message EDSignatureData {
     ECSignature signature = 10;
 }

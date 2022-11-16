@@ -13,7 +13,7 @@ import "protob/shared.proto";
 /*
  * State object for signatures, either partial (for offline/async "one round" signing) or full (contains the final ECDSA signature).
  */
-message SignatureData {
+message ECSignatureData {
     message OneRoundData {
         // Sanity check in FinalizeGetAndVerifyFinalSig
         int32 t = 1;
