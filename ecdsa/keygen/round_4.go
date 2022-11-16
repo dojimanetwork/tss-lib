@@ -9,9 +9,9 @@ package keygen
 import (
 	"errors"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round4) Start() *tss.Error {
@@ -38,7 +38,7 @@ func (round *round4) Start() *tss.Error {
 		if j == i {
 			continue
 		}
-		r3msg := msg.Content().(*KGRound3Message)
+		r3msg := msg.Content().(*ECKGRound3Message)
 		go func(prf paillier.Proof, j int, ch chan<- bool) {
 			ppk := round.save.PaillierPKs[j]
 			ok, err := prf.Verify(ppk.N, PIDs[j], ecdsaPub)

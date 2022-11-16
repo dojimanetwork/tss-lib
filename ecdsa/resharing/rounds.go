@@ -7,8 +7,8 @@
 package resharing
 
 import (
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (

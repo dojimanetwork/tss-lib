@@ -19,11 +19,11 @@ import (
 	"github.com/ipfs/go-log"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/test"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/test"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (
@@ -125,7 +125,7 @@ keygen:
 							continue
 						}
 						vssMsgs := P.temp.kgRound2Message1s
-						share := vssMsgs[j].Content().(*KGRound2Message1).Share
+						share := vssMsgs[j].Content().(*EDKGRound2Message1).Share
 						shareStruct := &vss.Share{
 							Threshold: threshold,
 							ID:        P.PartyID().KeyInt(),

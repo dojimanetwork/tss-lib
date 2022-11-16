@@ -9,7 +9,7 @@ package resharing
 import (
 	"errors"
 
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round5) Start() *tss.Error {
@@ -38,7 +38,7 @@ func (round *round5) Start() *tss.Error {
 			if j == i {
 				continue
 			}
-			r2msg1 := msg.Content().(*DGRound2Message1)
+			r2msg1 := msg.Content().(*ECDGRound2Message1)
 			round.save.PaillierPKs[j] = r2msg1.UnmarshalPaillierPK()
 		}
 	} else if round.IsOldCommittee() {

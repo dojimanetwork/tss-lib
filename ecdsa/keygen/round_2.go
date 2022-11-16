@@ -12,7 +12,7 @@ import (
 	"math/big"
 	"sync"
 
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (
@@ -35,7 +35,7 @@ func (round *round2) Start() *tss.Error {
 	dlnProof2FailCulprits := make([]*tss.PartyID, len(round.temp.kgRound1Messages))
 	wg := new(sync.WaitGroup)
 	for j, msg := range round.temp.kgRound1Messages {
-		r1msg := msg.Content().(*KGRound1Message)
+		r1msg := msg.Content().(*ECKGRound1Message)
 		H1j, H2j, NTildej, paillierPubKeyj :=
 			r1msg.UnmarshalH1(),
 			r1msg.UnmarshalH2(),
@@ -65,13 +65,13 @@ func (round *round2) Start() *tss.Error {
 			h1H2Map[h1JHex], h1H2Map[h2JHex] = struct{}{}, struct{}{}
 		}
 		wg.Add(2)
-		go func(j int, msg tss.ParsedMessage, r1msg *KGRound1Message, H1j, H2j, NTildej *big.Int) {
+		go func(j int, msg tss.ParsedMessage, r1msg *ECKGRound1Message, H1j, H2j, NTildej *big.Int) {
 			if dlnProof1, err := r1msg.UnmarshalDLNProof1(); err != nil || !dlnProof1.Verify(H1j, H2j, NTildej) {
 				dlnProof1FailCulprits[j] = msg.GetFrom()
 			}
 			wg.Done()
 		}(j, msg, r1msg, H1j, H2j, NTildej)
-		go func(j int, msg tss.ParsedMessage, r1msg *KGRound1Message, H1j, H2j, NTildej *big.Int) {
+		go func(j int, msg tss.ParsedMessage, r1msg *ECKGRound1Message, H1j, H2j, NTildej *big.Int) {
 			if dlnProof2, err := r1msg.UnmarshalDLNProof2(); err != nil || !dlnProof2.Verify(H2j, H1j, NTildej) {
 				dlnProof2FailCulprits[j] = msg.GetFrom()
 			}
@@ -89,7 +89,7 @@ func (round *round2) Start() *tss.Error {
 		if j == i {
 			continue
 		}
-		r1msg := msg.Content().(*KGRound1Message)
+		r1msg := msg.Content().(*ECKGRound1Message)
 		paillierPK, H1j, H2j, NTildej, KGC :=
 			r1msg.UnmarshalPaillierPK(),
 			r1msg.UnmarshalH1(),
@@ -105,7 +105,7 @@ func (round *round2) Start() *tss.Error {
 	// 5. p2p send share ij to Pj
 	shares := round.temp.shares
 	for j, Pj := range round.Parties().IDs() {
-		r2msg1 := NewKGRound2Message1(Pj, round.PartyID(), shares[j])
+		r2msg1 := NewECKGRound2Message1(Pj, round.PartyID(), shares[j])
 		// do not send to this Pj, but store for round 3
 		if j == i {
 			round.temp.kgRound2Message1s[j] = r2msg1
@@ -116,7 +116,7 @@ func (round *round2) Start() *tss.Error {
 	}
 
 	// 7. BROADCAST de-commitments of Shamir poly*G
-	r2msg2 := NewKGRound2Message2(round.PartyID(), round.temp.deCommitPolyG)
+	r2msg2 := NewECKGRound2Message2(round.PartyID(), round.temp.deCommitPolyG)
 	round.temp.kgRound2Message2s[i] = r2msg2
 	round.out <- r2msg2
 
@@ -124,10 +124,10 @@ func (round *round2) Start() *tss.Error {
 }
 
 func (round *round2) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*KGRound2Message1); ok {
+	if _, ok := msg.Content().(*ECKGRound2Message1); ok {
 		return !msg.IsBroadcast()
 	}
-	if _, ok := msg.Content().(*KGRound2Message2); ok {
+	if _, ok := msg.Content().(*ECKGRound2Message2); ok {
 		return msg.IsBroadcast()
 	}
 	return false

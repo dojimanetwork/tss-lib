@@ -12,9 +12,9 @@ import (
 	"github.com/agl/ed25519/edwards25519"
 	"github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round3) Start() *tss.Error {
@@ -39,7 +39,7 @@ func (round *round3) Start() *tss.Error {
 		}
 
 		msg := round.temp.signRound2Messages[j]
-		r2msg := msg.Content().(*SignRound2Message)
+		r2msg := msg.Content().(*EDSignRound2Message)
 		cmtDeCmt := commitments.HashCommitDecommit{C: round.temp.cjs[j], D: r2msg.UnmarshalDeCommitment()}
 		ok, coordinates := cmtDeCmt.DeCommit()
 		if !ok {
@@ -93,7 +93,7 @@ func (round *round3) Start() *tss.Error {
 	round.temp.r = encodedBytesToBigInt(&encodedR)
 
 	// 10. broadcast si to other parties
-	r3msg := NewSignRound3Message(round.PartyID(), encodedBytesToBigInt(&localS))
+	r3msg := NewEDSignRound3Message(round.PartyID(), encodedBytesToBigInt(&localS))
 	round.temp.signRound3Messages[round.PartyID().Index] = r3msg
 	round.out <- r3msg
 
@@ -114,7 +114,7 @@ func (round *round3) Update() (bool, *tss.Error) {
 }
 
 func (round *round3) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound3Message); ok {
+	if _, ok := msg.Content().(*EDSignRound3Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

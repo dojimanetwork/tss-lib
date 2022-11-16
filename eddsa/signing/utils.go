@@ -11,8 +11,8 @@ import (
 
 	"github.com/agl/ed25519/edwards25519"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func encodedBytesToBigInt(s *[32]byte) *big.Int {

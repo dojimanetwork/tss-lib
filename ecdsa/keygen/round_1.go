@@ -10,12 +10,12 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmts "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/dlnp"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmts "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 var (
@@ -111,7 +111,7 @@ func (round *round1) Start() *tss.Error {
 
 	// BROADCAST commitments, paillier pk + proof; round 1 message
 	{
-		msg, err := NewKGRound1Message(
+		msg, err := NewECKGRound1Message(
 			round.PartyID(), cmt.C, &preParams.PaillierSK.PublicKey, preParams.NTildei, preParams.H1i, preParams.H2i, dlnProof1, dlnProof2)
 		if err != nil {
 			return round.WrapError(err, Pi)
@@ -123,7 +123,7 @@ func (round *round1) Start() *tss.Error {
 }
 
 func (round *round1) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*KGRound1Message); ok {
+	if _, ok := msg.Content().(*ECKGRound1Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

@@ -14,11 +14,11 @@ import (
 
 	errors2 "github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round4) Start() *tss.Error {
@@ -46,7 +46,7 @@ func (round *round4) Start() *tss.Error {
 	dlnProof2FailCulprits := make([]*tss.PartyID, len(round.temp.dgRound2Message1s))
 	wg := new(sync.WaitGroup)
 	for j, msg := range round.temp.dgRound2Message1s {
-		r2msg1 := msg.Content().(*DGRound2Message1)
+		r2msg1 := msg.Content().(*ECDGRound2Message1)
 		paiPK, NTildej, H1j, H2j :=
 			r2msg1.UnmarshalPaillierPK(),
 			r2msg1.UnmarshalNTilde(),
@@ -64,21 +64,21 @@ func (round *round4) Start() *tss.Error {
 		}
 		h1H2Map[h1JHex], h1H2Map[h2JHex] = struct{}{}, struct{}{}
 		wg.Add(3)
-		go func(j int, msg tss.ParsedMessage, r2msg1 *DGRound2Message1) {
+		go func(j int, msg tss.ParsedMessage, r2msg1 *ECDGRound2Message1) {
 			if ok, err := r2msg1.UnmarshalPaillierProof().Verify(paiPK.N, msg.GetFrom().KeyInt(), round.save.ECDSAPub); err != nil || !ok {
 				paiProofCulprits[j] = msg.GetFrom()
 				common.Logger.Warnf("paillier verify failed for party %s", msg.GetFrom(), err)
 			}
 			wg.Done()
 		}(j, msg, r2msg1)
-		go func(j int, msg tss.ParsedMessage, r2msg1 *DGRound2Message1, H1j, H2j, NTildej *big.Int) {
+		go func(j int, msg tss.ParsedMessage, r2msg1 *ECDGRound2Message1, H1j, H2j, NTildej *big.Int) {
 			if dlnProof1, err := r2msg1.UnmarshalDLNProof1(); err != nil || !dlnProof1.Verify(H1j, H2j, NTildej) {
 				dlnProof1FailCulprits[j] = msg.GetFrom()
 				common.Logger.Warnf("dln proof 1 verify failed for party %s", msg.GetFrom(), err)
 			}
 			wg.Done()
 		}(j, msg, r2msg1, H1j, H2j, NTildej)
-		go func(j int, msg tss.ParsedMessage, r2msg1 *DGRound2Message1, H1j, H2j, NTildej *big.Int) {
+		go func(j int, msg tss.ParsedMessage, r2msg1 *ECDGRound2Message1, H1j, H2j, NTildej *big.Int) {
 			if dlnProof2, err := r2msg1.UnmarshalDLNProof2(); err != nil || !dlnProof2.Verify(H2j, H1j, NTildej) {
 				dlnProof2FailCulprits[j] = msg.GetFrom()
 				common.Logger.Warnf("dln proof 2 verify failed for party %s", msg.GetFrom(), err)
@@ -97,7 +97,7 @@ func (round *round4) Start() *tss.Error {
 		if j == i {
 			continue
 		}
-		r2msg1 := msg.Content().(*DGRound2Message1)
+		r2msg1 := msg.Content().(*ECDGRound2Message1)
 		round.save.NTildej[j] = new(big.Int).SetBytes(r2msg1.NTilde)
 		round.save.H1j[j] = new(big.Int).SetBytes(r2msg1.H1)
 		round.save.H2j[j] = new(big.Int).SetBytes(r2msg1.H2)
@@ -111,8 +111,8 @@ func (round *round4) Start() *tss.Error {
 	vjc := make([][]*crypto.ECPoint, len(round.OldParties().IDs()))
 	for j := 0; j <= len(vjc)-1; j++ { // P1..P_t+1. Ps are indexed from 0 here
 		// 6-7.
-		r1msg := round.temp.dgRound1Messages[j].Content().(*DGRound1Message)
-		r3msg2 := round.temp.dgRound3Message2s[j].Content().(*DGRound3Message2)
+		r1msg := round.temp.dgRound1Messages[j].Content().(*ECDGRound1Message)
+		r3msg2 := round.temp.dgRound3Message2s[j].Content().(*ECDGRound3Message2)
 
 		vCj, vDj := r1msg.UnmarshalVCommitment(), r3msg2.UnmarshalVDeCommitment()
 
@@ -130,7 +130,7 @@ func (round *round4) Start() *tss.Error {
 		vjc[j] = vj
 
 		// 8.
-		r3msg1 := round.temp.dgRound3Message1s[j].Content().(*DGRound3Message1)
+		r3msg1 := round.temp.dgRound3Message1s[j].Content().(*ECDGRound3Message1)
 		sharej := &vss.Share{
 			Threshold: round.NewThreshold(),
 			ID:        round.PartyID().KeyInt(),
@@ -191,7 +191,7 @@ func (round *round4) Start() *tss.Error {
 	round.temp.newBigXjs = newBigXjs
 
 	// Send an "ACK" message to both committees to signal that we're ready to save our data
-	r4msg := NewDGRound4Message(round.OldAndNewParties(), Pi)
+	r4msg := NewECDGRound4Message(round.OldAndNewParties(), Pi)
 	round.temp.dgRound4Messages[i] = r4msg
 	round.out <- r4msg
 
@@ -199,7 +199,7 @@ func (round *round4) Start() *tss.Error {
 }
 
 func (round *round4) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*DGRound4Message); ok {
+	if _, ok := msg.Content().(*ECDGRound4Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

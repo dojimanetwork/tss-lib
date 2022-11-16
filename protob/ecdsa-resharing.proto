@@ -6,14 +6,14 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/binance-chain/tss-lib/ecdsa/resharing";
+option go_package = "github.com/dojimanetwork/tss-lib/ecdsa/resharing";
 
 import "protob/shared.proto";
 
 /*
  * The Round 1 data is broadcast to peers of the New Committee in this message.
  */
-message DGRound1Message {
+message ECDGRound1Message {
     ECPoint ecdsa_pub = 1;
     bytes v_commitment = 2;
 }
@@ -21,7 +21,7 @@ message DGRound1Message {
 /*
  * The Round 2 data is broadcast to other peers of the New Committee in this message.
  */
-message DGRound2Message1 {
+message ECDGRound2Message1 {
     bytes paillier_n = 1;
     repeated bytes paillier_proof = 2;
     bytes n_tilde = 3;
@@ -34,25 +34,25 @@ message DGRound2Message1 {
 /*
  * The Round 2 "ACK" is broadcast to peers of the Old Committee in this message.
  */
-message DGRound2Message2 {
+message ECDGRound2Message2 {
 }
 
 /*
  * The Round 3 data is sent to peers of the New Committee in this message.
  */
-message DGRound3Message1 {
+message ECDGRound3Message1 {
     bytes share = 1;
 }
 
 /*
  * The Round 3 data is broadcast to peers of the New Committee in this message.
  */
-message DGRound3Message2 {
+message ECDGRound3Message2 {
     repeated bytes v_decommitment = 1;
 }
 
 /*
  * The Round 4 "ACK" is broadcast to peers of the Old and New Committees from the New Committee in this message.
  */
-message DGRound4Message {
+message ECDGRound4Message {
 }

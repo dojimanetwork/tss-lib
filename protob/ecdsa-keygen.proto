@@ -6,12 +6,12 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/binance-chain/tss-lib/ecdsa/keygen";
+option go_package = "github.com/dojimanetwork/tss-lib/ecdsa/keygen";
 
 /*
  * Represents a BROADCAST message sent during Round 1 of the ECDSA TSS keygen protocol.
  */
-message KGRound1Message {
+message ECKGRound1Message {
     bytes commitment = 1;
     bytes paillier_n = 2;
     bytes n_tilde = 3;
@@ -24,20 +24,20 @@ message KGRound1Message {
 /*
  * Represents a P2P message sent to each party during Round 2 of the ECDSA TSS keygen protocol.
  */
-message KGRound2Message1 {
+message ECKGRound2Message1 {
     bytes share = 1;
 }
 
 /*
  * Represents a BROADCAST message sent to each party during Round 2 of the ECDSA TSS keygen protocol.
  */
-message KGRound2Message2 {
+message ECKGRound2Message2 {
     repeated bytes de_commitment = 1;
 }
 
 /*
  * Represents a BROADCAST message sent to each party during Round 3 of the ECDSA TSS keygen protocol.
  */
-message KGRound3Message {
+message ECKGRound3Message {
     repeated bytes paillier_proof = 1;
 }

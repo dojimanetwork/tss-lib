@@ -13,11 +13,11 @@ import (
 	"github.com/hashicorp/go-multierror"
 	errors2 "github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round3) Start() *tss.Error {
@@ -37,7 +37,7 @@ func (round *round3) Start() *tss.Error {
 		if j == PIdx {
 			continue
 		}
-		r2msg1 := round.temp.kgRound2Message1s[j].Content().(*KGRound2Message1)
+		r2msg1 := round.temp.kgRound2Message1s[j].Content().(*EDKGRound2Message1)
 		share := r2msg1.UnmarshalShare()
 		xi = new(big.Int).Add(xi, share)
 	}
@@ -69,7 +69,7 @@ func (round *round3) Start() *tss.Error {
 		go func(j int, ch chan<- vssOut) {
 			// 4-10.
 			KGCj := round.temp.KGCs[j]
-			r2msg2 := round.temp.kgRound2Message2s[j].Content().(*KGRound2Message2)
+			r2msg2 := round.temp.kgRound2Message2s[j].Content().(*EDKGRound2Message2)
 			KGDj := r2msg2.UnmarshalDeCommitment()
 			cmtDeCmt := commitments.HashCommitDecommit{C: KGCj, D: KGDj}
 			ok, flatPolyGs := cmtDeCmt.DeCommit()
@@ -95,7 +95,7 @@ func (round *round3) Start() *tss.Error {
 				ch <- vssOut{errors.New("failed to prove zk proof"), nil}
 				return
 			}
-			r2msg1 := round.temp.kgRound2Message1s[j].Content().(*KGRound2Message1)
+			r2msg1 := round.temp.kgRound2Message1s[j].Content().(*EDKGRound2Message1)
 			PjShare := vss.Share{
 				Threshold: round.Threshold(),
 				ID:        round.PartyID().KeyInt(),

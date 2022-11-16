@@ -16,11 +16,11 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/hashicorp/go-multierror"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
-	"github.com/binance-chain/tss-lib/crypto/zkp"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/crypto/zkp"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (
@@ -204,7 +204,7 @@ func (round *finalization) Start() *tss.Error {
 				paiPKJ = round.key.PaillierPKs[j]
 			}
 
-			r7msgInner, ok := msg.Content().(*SignRound7Message).GetContent().(*SignRound7Message_Abort)
+			r7msgInner, ok := msg.Content().(*ECSignRound7Message).GetContent().(*ECSignRound7Message_Abort)
 			if !ok {
 				common.Logger.Warnf("round 8: unexpected success message while in aborting mode: %+v", r7msgInner)
 				culprits = append(culprits, Pj)
@@ -230,7 +230,7 @@ func (round *finalization) Start() *tss.Error {
 			cA, err := paiPKJ.EncryptWithChosenRandomness(
 				new(big.Int).SetBytes(r7msg.GetKI()),
 				new(big.Int).SetBytes(r7msg.GetKRandI()))
-			r1msg1 := round.temp.signRound1Message1s[j].Content().(*SignRound1Message1)
+			r1msg1 := round.temp.signRound1Message1s[j].Content().(*ECSignRound1Message1)
 			if err != nil || !bytes.Equal(cA.Bytes(), r1msg1.GetC()) {
 				culprits = append(culprits, Pj)
 				continue
@@ -300,7 +300,7 @@ func (round *finalization) Start() *tss.Error {
 			continue
 		}
 		Pj := round.Parties().IDs()[j]
-		r7msgInner, ok := msg.Content().(*SignRound7Message).GetContent().(*SignRound7Message_SI)
+		r7msgInner, ok := msg.Content().(*ECSignRound7Message).GetContent().(*ECSignRound7Message_SI)
 		if !ok {
 			culprits = append(culprits, Pj)
 			multiErr = multierror.Append(multiErr, fmt.Errorf("round 8: unexpected abort message while in success mode: %+v", r7msgInner))

@@ -11,11 +11,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round4) Start() *tss.Error {
@@ -43,8 +43,8 @@ func (round *round4) Start() *tss.Error {
 	modQ := common.ModInt(tss.EC().Params().N)
 	vjc := make([][]*crypto.ECPoint, len(round.OldParties().IDs()))
 	for j := 0; j <= len(vjc)-1; j++ { // P1..P_t+1. Ps are indexed from 0 here
-		r1msg := round.temp.dgRound1Messages[j].Content().(*DGRound1Message)
-		r3msg2 := round.temp.dgRound3Message2s[j].Content().(*DGRound3Message2)
+		r1msg := round.temp.dgRound1Messages[j].Content().(*EDDGRound1Message)
+		r3msg2 := round.temp.dgRound3Message2s[j].Content().(*EDDGRound3Message2)
 
 		vCj, vDj := r1msg.UnmarshalVCommitment(), r3msg2.UnmarshalVDeCommitment()
 
@@ -66,7 +66,7 @@ func (round *round4) Start() *tss.Error {
 
 		vjc[j] = vj
 
-		r3msg1 := round.temp.dgRound3Message1s[j].Content().(*DGRound3Message1)
+		r3msg1 := round.temp.dgRound3Message1s[j].Content().(*EDDGRound3Message1)
 		sharej := &vss.Share{
 			Threshold: round.NewThreshold(),
 			ID:        round.PartyID().KeyInt(),
@@ -125,7 +125,7 @@ func (round *round4) Start() *tss.Error {
 	round.temp.newBigXjs = newBigXjs
 
 	// 21. Send an "ACK" message to both committees to signal that we're ready to save our data
-	r4msg := NewDGRound4Message(round.OldAndNewParties(), Pi)
+	r4msg := NewEDDGRound4Message(round.OldAndNewParties(), Pi)
 	round.temp.dgRound4Messages[i] = r4msg
 	round.out <- r4msg
 
@@ -133,7 +133,7 @@ func (round *round4) Start() *tss.Error {
 }
 
 func (round *round4) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*DGRound4Message); ok {
+	if _, ok := msg.Content().(*EDDGRound4Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

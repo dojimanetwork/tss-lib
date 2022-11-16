@@ -10,12 +10,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/ecdsa/signing"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/ecdsa/signing"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // round 1 represents round 1 of the keygen part of the GG18 ECDSA TSS spec (Gennaro, Goldfeder; 2018)
@@ -70,7 +70,7 @@ func (round *round1) Start() *tss.Error {
 	round.temp.NewShares = shares
 
 	// 5. "broadcast" C_i to members of the NEW committee
-	r1msg := NewDGRound1Message(
+	r1msg := NewECDGRound1Message(
 		round.NewParties().IDs().Exclude(round.PartyID()), round.PartyID(),
 		round.input.ECDSAPub, vCmt.C)
 	round.temp.dgRound1Messages[i] = r1msg
@@ -81,7 +81,7 @@ func (round *round1) Start() *tss.Error {
 
 func (round *round1) CanAccept(msg tss.ParsedMessage) bool {
 	// accept messages from old -> new committee
-	if _, ok := msg.Content().(*DGRound1Message); ok {
+	if _, ok := msg.Content().(*ECDGRound1Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false
@@ -103,7 +103,7 @@ func (round *round1) Update() (bool, *tss.Error) {
 		round.oldOK[j] = true
 
 		// save the ecdsa pub received from the old committee
-		r1msg := round.temp.dgRound1Messages[0].Content().(*DGRound1Message)
+		r1msg := round.temp.dgRound1Messages[0].Content().(*ECDGRound1Message)
 		candidate, err := r1msg.UnmarshalECDSAPub()
 		if err != nil {
 			return false, round.WrapError(errors.New("unable to unmarshal the ecdsa pub key"), msg.GetFrom())

@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/binance-chain/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/common"
 )
 
 type Party interface {

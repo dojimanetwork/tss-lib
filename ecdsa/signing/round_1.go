@@ -11,12 +11,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/mta"
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/mta"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 var (
@@ -88,13 +88,13 @@ func (round *round1) Start() *tss.Error {
 		if err != nil {
 			return round.WrapError(fmt.Errorf("failed to init mta: %v", err))
 		}
-		r1msg1 := NewSignRound1Message1(Pj, round.PartyID(), cA, pi)
+		r1msg1 := NewECSignRound1Message1(Pj, round.PartyID(), cA, pi)
 		round.temp.signRound1Message1s[i] = r1msg1
 		round.temp.c1Is[j] = cA
 		round.out <- r1msg1
 	}
 
-	r1msg2 := NewSignRound1Message2(round.PartyID(), cmt.C)
+	r1msg2 := NewECSignRound1Message2(round.PartyID(), cmt.C)
 	round.temp.signRound1Message2s[i] = r1msg2
 	round.out <- r1msg2
 	return nil
@@ -118,10 +118,10 @@ func (round *round1) Update() (bool, *tss.Error) {
 }
 
 func (round *round1) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound1Message1); ok {
+	if _, ok := msg.Content().(*ECSignRound1Message1); ok {
 		return !msg.IsBroadcast()
 	}
-	if _, ok := msg.Content().(*SignRound1Message2); ok {
+	if _, ok := msg.Content().(*ECSignRound1Message2); ok {
 		return msg.IsBroadcast()
 	}
 	return false

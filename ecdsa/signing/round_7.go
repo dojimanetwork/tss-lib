@@ -13,9 +13,9 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round7) Start() *tss.Error {
@@ -43,8 +43,8 @@ func (round *round7) Start() *tss.Error {
 				continue
 			}
 			Pj := round.Parties().IDs()[j]
-			r3msg := round.temp.signRound3Messages[j].Content().(*SignRound3Message)
-			r6msgInner, ok := msg.Content().(*SignRound6Message).GetContent().(*SignRound6Message_Abort)
+			r3msg := round.temp.signRound3Messages[j].Content().(*ECSignRound3Message)
+			r6msgInner, ok := msg.Content().(*ECSignRound6Message).GetContent().(*ECSignRound6Message_Abort)
 			if !ok {
 				common.Logger.Warnf("round 7: unexpected success message while in aborting mode: %+v", r6msgInner)
 				culprits = append(culprits, Pj)
@@ -104,8 +104,8 @@ func (round *round7) Start() *tss.Error {
 	var multiErr error
 	for j, msg := range round.temp.signRound6Messages {
 		Pj := round.Parties().IDs()[j]
-		r3msg := round.temp.signRound3Messages[j].Content().(*SignRound3Message)
-		r6msgInner, ok := msg.Content().(*SignRound6Message).GetContent().(*SignRound6Message_Success)
+		r3msg := round.temp.signRound3Messages[j].Content().(*ECSignRound3Message)
+		r6msgInner, ok := msg.Content().(*ECSignRound6Message).GetContent().(*ECSignRound6Message_Success)
 		if !ok {
 			culprits = append(culprits, Pj)
 			multiErr = multierror.Append(multiErr, fmt.Errorf("unexpected abort message while in success mode: %+v", r6msgInner))
@@ -164,13 +164,13 @@ func (round *round7) Start() *tss.Error {
 		common.Logger.Warnf("round 7: consistency check failed: y != bigSJ products, entering Type 7 identified abort")
 
 		// If we abort here, one-round mode won't matter now - we will proceed to round "8" anyway.
-		r7msg := NewSignRound7MessageAbort(Pi, &round.temp.r7AbortData)
+		r7msg := NewECSignRound7MessageAbort(Pi, &round.temp.r7AbortData)
 		round.temp.signRound7Messages[i] = r7msg
 		round.out <- r7msg
 		return nil
 	}
 	// wipe sensitive data for gc, not used from here
-	round.temp.r7AbortData = SignRound7Message_AbortData{}
+	round.temp.r7AbortData = ECSignRound7Message_AbortData{}
 
 	// PRE-PROCESSING FINISHED
 	// If we are in one-round signing mode (msg is nil), we will exit out with the current state here and we are done.
@@ -188,7 +188,7 @@ func (round *round7) Start() *tss.Error {
 	sI := FinalizeGetOurSigShare(round.data, round.temp.m)
 	round.temp.sI = sI
 
-	r7msg := NewSignRound7MessageSuccess(round.PartyID(), sI)
+	r7msg := NewECSignRound7MessageSuccess(round.PartyID(), sI)
 	round.temp.signRound7Messages[i] = r7msg
 	round.out <- r7msg
 	return nil
@@ -210,7 +210,7 @@ func (round *round7) Update() (bool, *tss.Error) {
 
 func (round *round7) CanAccept(msg tss.ParsedMessage) bool {
 	// Collect messages for the full online protocol OR identified abort of type 7.
-	if _, ok := msg.Content().(*SignRound7Message); ok {
+	if _, ok := msg.Content().(*ECSignRound7Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

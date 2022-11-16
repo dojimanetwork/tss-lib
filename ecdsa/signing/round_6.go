@@ -13,10 +13,10 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/zkp"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/zkp"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round6) Start() *tss.Error {
@@ -43,7 +43,7 @@ func (round *round6) Start() *tss.Error {
 	BigRBarJ := make(map[string]*common.ECPoint, len(round.temp.signRound5Messages))
 	for j, msg := range round.temp.signRound5Messages {
 		Pj := round.Parties().IDs()[j]
-		r5msg := msg.Content().(*SignRound5Message)
+		r5msg := msg.Content().(*ECSignRound5Message)
 		bigRBarJ, err := r5msg.UnmarshalRI()
 		if err != nil {
 			errs[Pj] = err
@@ -71,7 +71,7 @@ func (round *round6) Start() *tss.Error {
 			errs[Pj] = err
 			continue
 		}
-		r1msg1 := round.temp.signRound1Message1s[j].Content().(*SignRound1Message1)
+		r1msg1 := round.temp.signRound1Message1s[j].Content().(*ECSignRound1Message1)
 		pdlWSlackStatement := zkp.PDLwSlackStatement{
 			PK:         round.key.PaillierPKs[Pj.Index],
 			CipherText: new(big.Int).SetBytes(r1msg1.GetC()),
@@ -101,14 +101,14 @@ func (round *round6) Start() *tss.Error {
 			round.abortingT5 = true
 			common.Logger.Warnf("round 6: consistency check failed: g != R products, entering Type 5 identified abort")
 
-			r6msg := NewSignRound6MessageAbort(Pi, &round.temp.r5AbortData)
+			r6msg := NewECSignRound6MessageAbort(Pi, &round.temp.r5AbortData)
 			round.temp.signRound6Messages[i] = r6msg
 			round.out <- r6msg
 			return nil
 		}
 	}
 	// wipe sensitive data for gc, not used from here
-	round.temp.r5AbortData = SignRound6Message_AbortData{}
+	round.temp.r5AbortData = ECSignRound6Message_AbortData{}
 
 	round.temp.BigRBarJ = BigRBarJ
 
@@ -137,7 +137,7 @@ func (round *round6) Start() *tss.Error {
 	round.temp.lI.Set(zero)
 	round.temp.TI, round.temp.lI = nil, nil
 
-	r6msg := NewSignRound6MessageSuccess(Pi, bigSI, stPf)
+	r6msg := NewECSignRound6MessageSuccess(Pi, bigSI, stPf)
 	round.temp.signRound6Messages[i] = r6msg
 	round.out <- r6msg
 	return nil
@@ -157,7 +157,7 @@ func (round *round6) Update() (bool, *tss.Error) {
 }
 
 func (round *round6) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound6Message); ok {
+	if _, ok := msg.Content().(*ECSignRound6Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

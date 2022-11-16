@@ -9,11 +9,11 @@ package resharing
 import (
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // These messages were generated from Protocol Buffers definitions into eddsa-resharing.pb.go
@@ -21,17 +21,17 @@ import (
 var (
 	// Ensure that signing messages implement ValidateBasic
 	_ = []tss.MessageContent{
-		(*DGRound1Message)(nil),
-		(*DGRound2Message)(nil),
-		(*DGRound3Message1)(nil),
-		(*DGRound3Message2)(nil),
-		(*DGRound4Message)(nil),
+		(*EDDGRound1Message)(nil),
+		(*EDDGRound2Message)(nil),
+		(*EDDGRound3Message1)(nil),
+		(*EDDGRound3Message2)(nil),
+		(*EDDGRound4Message)(nil),
 	}
 )
 
 // ----- //
 
-func NewDGRound1Message(
+func NewEDDGRound1Message(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 	eddsaPub *crypto.ECPoint,
@@ -43,7 +43,7 @@ func NewDGRound1Message(
 		IsBroadcast:      true,
 		IsToOldCommittee: false,
 	}
-	content := &DGRound1Message{
+	content := &EDDGRound1Message{
 		EddsaPub:    eddsaPub.ToProtobufPoint(),
 		VCommitment: vct.Bytes(),
 	}
@@ -51,24 +51,24 @@ func NewDGRound1Message(
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound1Message) ValidateBasic() bool {
+func (m *EDDGRound1Message) ValidateBasic() bool {
 	return m != nil &&
 		m.GetEddsaPub() != nil &&
 		m.GetEddsaPub().ValidateBasic() &&
 		common.NonEmptyBytes(m.VCommitment)
 }
 
-func (m *DGRound1Message) UnmarshalEDDSAPub() (*crypto.ECPoint, error) {
+func (m *EDDGRound1Message) UnmarshalEDDSAPub() (*crypto.ECPoint, error) {
 	return crypto.NewECPointFromProtobuf(m.GetEddsaPub())
 }
 
-func (m *DGRound1Message) UnmarshalVCommitment() *big.Int {
+func (m *EDDGRound1Message) UnmarshalVCommitment() *big.Int {
 	return new(big.Int).SetBytes(m.GetVCommitment())
 }
 
 // ----- //
 
-func NewDGRound2Message(
+func NewEDDGRound2Message(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 ) tss.ParsedMessage {
@@ -78,18 +78,18 @@ func NewDGRound2Message(
 		IsBroadcast:      true,
 		IsToOldCommittee: true,
 	}
-	content := &DGRound2Message{}
+	content := &EDDGRound2Message{}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound2Message) ValidateBasic() bool {
+func (m *EDDGRound2Message) ValidateBasic() bool {
 	return true
 }
 
 // ----- //
 
-func NewDGRound3Message1(
+func NewEDDGRound3Message1(
 	to *tss.PartyID,
 	from *tss.PartyID,
 	share *vss.Share,
@@ -100,21 +100,21 @@ func NewDGRound3Message1(
 		IsBroadcast:      false,
 		IsToOldCommittee: false,
 	}
-	content := &DGRound3Message1{
+	content := &EDDGRound3Message1{
 		Share: share.Share.Bytes(),
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound3Message1) ValidateBasic() bool {
+func (m *EDDGRound3Message1) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyBytes(m.Share)
 }
 
 // ----- //
 
-func NewDGRound3Message2(
+func NewEDDGRound3Message2(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 	vdct cmt.HashDeCommitment,
@@ -126,26 +126,26 @@ func NewDGRound3Message2(
 		IsToOldCommittee: false,
 	}
 	vDctBzs := common.BigIntsToBytes(vdct)
-	content := &DGRound3Message2{
+	content := &EDDGRound3Message2{
 		VDecommitment: vDctBzs,
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound3Message2) ValidateBasic() bool {
+func (m *EDDGRound3Message2) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyMultiBytes(m.VDecommitment)
 }
 
-func (m *DGRound3Message2) UnmarshalVDeCommitment() cmt.HashDeCommitment {
+func (m *EDDGRound3Message2) UnmarshalVDeCommitment() cmt.HashDeCommitment {
 	deComBzs := m.GetVDecommitment()
 	return cmt.NewHashDeCommitmentFromBytes(deComBzs)
 }
 
 // ----- //
 
-func NewDGRound4Message(
+func NewEDDGRound4Message(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 ) tss.ParsedMessage {
@@ -155,11 +155,11 @@ func NewDGRound4Message(
 		IsBroadcast:             true,
 		IsToOldAndNewCommittees: true,
 	}
-	content := &DGRound4Message{}
+	content := &EDDGRound4Message{}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound4Message) ValidateBasic() bool {
+func (m *EDDGRound4Message) ValidateBasic() bool {
 	return true
 }

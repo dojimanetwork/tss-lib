@@ -10,12 +10,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // Implements Party
@@ -125,7 +125,7 @@ func (p *LocalParty) ValidateMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	// check that the message's "from index" will fit into the array
 	var maxFromIdx int
 	switch msg.Content().(type) {
-	case *DGRound2Message1, *DGRound2Message2, *DGRound4Message:
+	case *ECDGRound2Message1, *ECDGRound2Message2, *ECDGRound4Message:
 		maxFromIdx = len(p.params.NewParties().IDs()) - 1
 	default:
 		maxFromIdx = len(p.params.OldParties().IDs()) - 1
@@ -147,17 +147,17 @@ func (p *LocalParty) StoreMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	// switch/case is necessary to store any messages beyond current round
 	// this does not handle message replays. we expect the caller to apply replay and spoofing protection.
 	switch msg.Content().(type) {
-	case *DGRound1Message:
+	case *ECDGRound1Message:
 		p.temp.dgRound1Messages[fromPIdx] = msg
-	case *DGRound2Message1:
+	case *ECDGRound2Message1:
 		p.temp.dgRound2Message1s[fromPIdx] = msg
-	case *DGRound2Message2:
+	case *ECDGRound2Message2:
 		p.temp.dgRound2Message2s[fromPIdx] = msg
-	case *DGRound3Message1:
+	case *ECDGRound3Message1:
 		p.temp.dgRound3Message1s[fromPIdx] = msg
-	case *DGRound3Message2:
+	case *ECDGRound3Message2:
 		p.temp.dgRound3Message2s[fromPIdx] = msg
-	case *DGRound4Message:
+	case *ECDGRound4Message:
 		p.temp.dgRound4Messages[fromPIdx] = msg
 	default: // unrecognised message, just ignore!
 		common.Logger.Warnf("unrecognised message ignored: %v", msg)

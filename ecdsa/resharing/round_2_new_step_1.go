@@ -9,9 +9,9 @@ package resharing
 import (
 	"errors"
 
-	"github.com/binance-chain/tss-lib/crypto/dlnp"
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round2) Start() *tss.Error {
@@ -31,7 +31,7 @@ func (round *round2) Start() *tss.Error {
 	i := Pi.Index
 
 	// 2. "broadcast" "ACK" members of the OLD committee
-	r2msg1 := NewDGRound2Message2(
+	r2msg1 := NewECDGRound2Message2(
 		round.OldParties().IDs().Exclude(round.PartyID()), round.PartyID())
 	round.temp.dgRound2Message2s[i] = r2msg1
 	round.out <- r2msg1
@@ -71,7 +71,7 @@ func (round *round2) Start() *tss.Error {
 	dlnProof2 := dlnp.NewProof(h2i, h1i, beta, p, q, NTildei)
 
 	paillierPf := preParams.PaillierSK.Proof(Pi.KeyInt(), round.save.ECDSAPub)
-	r2msg2, err := NewDGRound2Message1(
+	r2msg2, err := NewECDGRound2Message1(
 		round.NewParties().IDs().Exclude(round.PartyID()), round.PartyID(),
 		&preParams.PaillierSK.PublicKey, paillierPf, preParams.NTildei, preParams.H1i, preParams.H2i, dlnProof1, dlnProof2)
 	if err != nil {
@@ -91,12 +91,12 @@ func (round *round2) Start() *tss.Error {
 
 func (round *round2) CanAccept(msg tss.ParsedMessage) bool {
 	if round.ReSharingParams().IsNewCommittee() {
-		if _, ok := msg.Content().(*DGRound2Message1); ok {
+		if _, ok := msg.Content().(*ECDGRound2Message1); ok {
 			return msg.IsBroadcast()
 		}
 	}
 	if round.ReSharingParams().IsOldCommittee() {
-		if _, ok := msg.Content().(*DGRound2Message2); ok {
+		if _, ok := msg.Content().(*ECDGRound2Message2); ok {
 			return msg.IsBroadcast()
 		}
 	}

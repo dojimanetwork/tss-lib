@@ -11,8 +11,8 @@ import (
 
 	errors2 "github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/crypto/zkp"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/crypto/zkp"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round2) Start() *tss.Error {
@@ -27,14 +27,14 @@ func (round *round2) Start() *tss.Error {
 
 	// 4. store r1 message pieces
 	for j, msg := range round.temp.kgRound1Messages {
-		r1msg := msg.Content().(*KGRound1Message)
+		r1msg := msg.Content().(*EDKGRound1Message)
 		round.temp.KGCs[j] = r1msg.UnmarshalCommitment()
 	}
 
 	// 3. p2p send share ij to Pj
 	shares := round.temp.shares
 	for j, Pj := range round.Parties().IDs() {
-		r2msg1 := NewKGRound2Message1(Pj, round.PartyID(), shares[j])
+		r2msg1 := NewEDKGRound2Message1(Pj, round.PartyID(), shares[j])
 		// do not send to this Pj, but store for round 3
 		if j == i {
 			round.temp.kgRound2Message1s[j] = r2msg1
@@ -51,7 +51,7 @@ func (round *round2) Start() *tss.Error {
 	}
 
 	// 5. BROADCAST de-commitments of Shamir poly*G and Schnorr prove
-	r2msg2 := NewKGRound2Message2(round.PartyID(), round.temp.deCommitPolyG, pii)
+	r2msg2 := NewEDKGRound2Message2(round.PartyID(), round.temp.deCommitPolyG, pii)
 	round.temp.kgRound2Message2s[i] = r2msg2
 	round.out <- r2msg2
 
@@ -59,10 +59,10 @@ func (round *round2) Start() *tss.Error {
 }
 
 func (round *round2) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*KGRound2Message1); ok {
+	if _, ok := msg.Content().(*EDKGRound2Message1); ok {
 		return !msg.IsBroadcast()
 	}
-	if _, ok := msg.Content().(*KGRound2Message2); ok {
+	if _, ok := msg.Content().(*EDKGRound2Message2); ok {
 		return msg.IsBroadcast()
 	}
 	return false

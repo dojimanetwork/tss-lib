@@ -13,11 +13,11 @@ import (
 
 	errorspkg "github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/mta"
-	"github.com/binance-chain/tss-lib/crypto/zkp"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/mta"
+	"github.com/dojimanetwork/tss-lib/crypto/zkp"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round3) Start() *tss.Error {
@@ -46,7 +46,7 @@ func (round *round3) Start() *tss.Error {
 		// Alice_end
 		go func(j int, Pj *tss.PartyID) {
 			defer wg.Done()
-			r2msg := round.temp.signRound2Messages[j].Content().(*SignRound2Message)
+			r2msg := round.temp.signRound2Messages[j].Content().(*ECSignRound2Message)
 			proofBob, err := r2msg.UnmarshalProofBob()
 			if err != nil {
 				errChs <- round.WrapError(errorspkg.Wrapf(err, "MtA: UnmarshalProofBob failed"), Pj)
@@ -71,7 +71,7 @@ func (round *round3) Start() *tss.Error {
 		// Alice_end_wc
 		go func(j int, Pj *tss.PartyID) {
 			defer wg.Done()
-			r2msg := round.temp.signRound2Messages[j].Content().(*SignRound2Message)
+			r2msg := round.temp.signRound2Messages[j].Content().(*ECSignRound2Message)
 			proofBobWC, err := r2msg.UnmarshalProofBobWC()
 			if err != nil {
 				errChs <- round.WrapError(errorspkg.Wrapf(err, "MtA: UnmarshalProofBobWC failed"), Pj)
@@ -158,7 +158,7 @@ func (round *round3) Start() *tss.Error {
 	round.temp.deltaI = deltaI
 	round.temp.sigmaI = sigmaI
 
-	r3msg := NewSignRound3Message(Pi, deltaI, TI, tProof)
+	r3msg := NewECSignRound3Message(Pi, deltaI, TI, tProof)
 	round.temp.signRound3Messages[i] = r3msg
 	round.out <- r3msg
 	return nil
@@ -178,7 +178,7 @@ func (round *round3) Update() (bool, *tss.Error) {
 }
 
 func (round *round3) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound3Message); ok {
+	if _, ok := msg.Content().(*ECSignRound3Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

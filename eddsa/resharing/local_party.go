@@ -10,12 +10,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/eddsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/eddsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // Implements Party
@@ -120,7 +120,7 @@ func (p *LocalParty) ValidateMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	// check that the message's "from index" will fit into the array
 	var maxFromIdx int
 	switch msg.Content().(type) {
-	case *DGRound2Message, *DGRound4Message:
+	case *EDDGRound2Message, *EDDGRound4Message:
 		maxFromIdx = len(p.params.NewParties().IDs()) - 1
 	default:
 		maxFromIdx = len(p.params.OldParties().IDs()) - 1
@@ -142,15 +142,15 @@ func (p *LocalParty) StoreMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	// switch/case is necessary to store any messages beyond current round
 	// this does not handle message replays. we expect the caller to apply replay and spoofing protection.
 	switch msg.Content().(type) {
-	case *DGRound1Message:
+	case *EDDGRound1Message:
 		p.temp.dgRound1Messages[fromPIdx] = msg
-	case *DGRound2Message:
+	case *EDDGRound2Message:
 		p.temp.dgRound2Messages[fromPIdx] = msg
-	case *DGRound3Message1:
+	case *EDDGRound3Message1:
 		p.temp.dgRound3Message1s[fromPIdx] = msg
-	case *DGRound3Message2:
+	case *EDDGRound3Message2:
 		p.temp.dgRound3Message2s[fromPIdx] = msg
-	case *DGRound4Message:
+	case *EDDGRound4Message:
 		p.temp.dgRound4Messages[fromPIdx] = msg
 	default: // unrecognised message, just ignore!
 		common.Logger.Warnf("unrecognised message ignored: %v", msg)

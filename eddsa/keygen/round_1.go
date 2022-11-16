@@ -10,11 +10,11 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmts "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmts "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 var (
@@ -74,7 +74,7 @@ func (round *round1) Start() *tss.Error {
 
 	// BROADCAST commitments
 	{
-		msg := NewKGRound1Message(round.PartyID(), cmt.C)
+		msg := NewEDKGRound1Message(round.PartyID(), cmt.C)
 		round.temp.kgRound1Messages[i] = msg
 		round.out <- msg
 	}
@@ -82,7 +82,7 @@ func (round *round1) Start() *tss.Error {
 }
 
 func (round *round1) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*KGRound1Message); ok {
+	if _, ok := msg.Content().(*EDKGRound1Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

@@ -11,8 +11,8 @@ import (
 
 	errors2 "github.com/pkg/errors"
 
-	"github.com/binance-chain/tss-lib/crypto/zkp"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/crypto/zkp"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round2) Start() *tss.Error {
@@ -27,7 +27,7 @@ func (round *round2) Start() *tss.Error {
 
 	// 1. store r1 message pieces
 	for j, msg := range round.temp.signRound1Messages {
-		r1msg := msg.Content().(*SignRound1Message)
+		r1msg := msg.Content().(*EDSignRound1Message)
 		round.temp.cjs[j] = r1msg.UnmarshalCommitment()
 	}
 
@@ -38,7 +38,7 @@ func (round *round2) Start() *tss.Error {
 	}
 
 	// 3. BROADCAST de-commitments of Shamir poly*G and Schnorr prove
-	r2msg := NewSignRound2Message(round.PartyID(), round.temp.deCommit, pir)
+	r2msg := NewEDSignRound2Message(round.PartyID(), round.temp.deCommit, pir)
 	round.temp.signRound2Messages[i] = r2msg
 	round.out <- r2msg
 
@@ -46,7 +46,7 @@ func (round *round2) Start() *tss.Error {
 }
 
 func (round *round2) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound2Message); ok {
+	if _, ok := msg.Content().(*EDSignRound2Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

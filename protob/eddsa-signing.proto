@@ -6,21 +6,21 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/binance-chain/tss-lib/eddsa/signing";
+option go_package = "github.com/dojimanetwork/tss-lib/eddsa/signing";
 
 import "protob/shared.proto";
 
 /*
  * Represents a BROADCAST message sent to all parties during Round 1 of the EDDSA TSS signing protocol.
  */
-message SignRound1Message {
+message EDSignRound1Message {
     bytes commitment = 1;
 }
 
 /*
  * Represents a BROADCAST message sent to all parties during Round 2 of the EDDSA TSS signing protocol.
  */
-message SignRound2Message {
+message EDSignRound2Message {
     repeated bytes de_commitment = 1;
     ECPoint proof_alpha = 2;
     bytes proof_t = 3;
@@ -29,6 +29,6 @@ message SignRound2Message {
 /*
  * Represents a BROADCAST message sent to all parties during Round 3 of the EDDSA TSS signing protocol.
  */
-message SignRound3Message {
+message EDSignRound3Message {
     bytes s = 1;
 }

@@ -11,12 +11,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/mta"
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/mta"
+	"github.com/dojimanetwork/tss-lib/ecdsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // Implements Party
@@ -78,7 +78,7 @@ type (
 
 		// round 5
 		bigGammaJs  []*crypto.ECPoint
-		r5AbortData SignRound6Message_AbortData
+		r5AbortData ECSignRound6Message_AbortData
 
 		// round 6
 		SignatureData_OneRoundData
@@ -87,7 +87,7 @@ type (
 		sI *big.Int
 		rI,
 		TI *crypto.ECPoint
-		r7AbortData SignRound7Message_AbortData
+		r7AbortData ECSignRound7Message_AbortData
 	}
 )
 
@@ -195,21 +195,21 @@ func (p *LocalParty) StoreMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	// switch/case is necessary to store any messages beyond current round
 	// this does not handle message replays. we expect the caller to apply replay and spoofing protection.
 	switch msg.Content().(type) {
-	case *SignRound1Message1:
+	case *ECSignRound1Message1:
 		p.temp.signRound1Message1s[fromPIdx] = msg
-	case *SignRound1Message2:
+	case *ECSignRound1Message2:
 		p.temp.signRound1Message2s[fromPIdx] = msg
-	case *SignRound2Message:
+	case *ECSignRound2Message:
 		p.temp.signRound2Messages[fromPIdx] = msg
-	case *SignRound3Message:
+	case *ECSignRound3Message:
 		p.temp.signRound3Messages[fromPIdx] = msg
-	case *SignRound4Message:
+	case *ECSignRound4Message:
 		p.temp.signRound4Messages[fromPIdx] = msg
-	case *SignRound5Message:
+	case *ECSignRound5Message:
 		p.temp.signRound5Messages[fromPIdx] = msg
-	case *SignRound6Message:
+	case *ECSignRound6Message:
 		p.temp.signRound6Messages[fromPIdx] = msg
-	case *SignRound7Message:
+	case *ECSignRound7Message:
 		p.temp.signRound7Messages[fromPIdx] = msg
 	default: // unrecognised message, just ignore!
 		common.Logger.Warnf("unrecognised message ignored: %v", msg)

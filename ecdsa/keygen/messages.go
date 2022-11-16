@@ -9,12 +9,12 @@ package keygen
 import (
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/dlnp"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // These messages were generated from Protocol Buffers definitions into ecdsa-keygen.pb.go
@@ -22,16 +22,16 @@ import (
 var (
 	// Ensure that keygen messages implement ValidateBasic
 	_ = []tss.MessageContent{
-		(*KGRound1Message)(nil),
-		(*KGRound2Message1)(nil),
-		(*KGRound2Message2)(nil),
-		(*KGRound3Message)(nil),
+		(*ECKGRound1Message)(nil),
+		(*ECKGRound2Message1)(nil),
+		(*ECKGRound2Message2)(nil),
+		(*ECKGRound3Message)(nil),
 	}
 )
 
 // ----- //
 
-func NewKGRound1Message(
+func NewECKGRound1Message(
 	from *tss.PartyID,
 	ct cmt.HashCommitment,
 	paillierPK *paillier.PublicKey,
@@ -50,7 +50,7 @@ func NewKGRound1Message(
 	if err != nil {
 		return nil, err
 	}
-	content := &KGRound1Message{
+	content := &ECKGRound1Message{
 		Commitment: ct.Bytes(),
 		PaillierN:  paillierPK.N.Bytes(),
 		NTilde:     nTildeI.Bytes(),
@@ -63,7 +63,7 @@ func NewKGRound1Message(
 	return tss.NewMessage(meta, content, msg), nil
 }
 
-func (m *KGRound1Message) ValidateBasic() bool {
+func (m *ECKGRound1Message) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyBytes(m.GetCommitment()) &&
 		common.NonEmptyBytes(m.GetPaillierN()) &&
@@ -75,37 +75,37 @@ func (m *KGRound1Message) ValidateBasic() bool {
 		common.NonEmptyMultiBytes(m.GetDlnproof_2(), 2+(dlnp.Iterations*2))
 }
 
-func (m *KGRound1Message) UnmarshalCommitment() *big.Int {
+func (m *ECKGRound1Message) UnmarshalCommitment() *big.Int {
 	return new(big.Int).SetBytes(m.GetCommitment())
 }
 
-func (m *KGRound1Message) UnmarshalPaillierPK() *paillier.PublicKey {
+func (m *ECKGRound1Message) UnmarshalPaillierPK() *paillier.PublicKey {
 	return &paillier.PublicKey{N: new(big.Int).SetBytes(m.GetPaillierN())}
 }
 
-func (m *KGRound1Message) UnmarshalNTilde() *big.Int {
+func (m *ECKGRound1Message) UnmarshalNTilde() *big.Int {
 	return new(big.Int).SetBytes(m.GetNTilde())
 }
 
-func (m *KGRound1Message) UnmarshalH1() *big.Int {
+func (m *ECKGRound1Message) UnmarshalH1() *big.Int {
 	return new(big.Int).SetBytes(m.GetH1())
 }
 
-func (m *KGRound1Message) UnmarshalH2() *big.Int {
+func (m *ECKGRound1Message) UnmarshalH2() *big.Int {
 	return new(big.Int).SetBytes(m.GetH2())
 }
 
-func (m *KGRound1Message) UnmarshalDLNProof1() (*dlnp.Proof, error) {
+func (m *ECKGRound1Message) UnmarshalDLNProof1() (*dlnp.Proof, error) {
 	return dlnp.UnmarshalProof(m.GetDlnproof_1())
 }
 
-func (m *KGRound1Message) UnmarshalDLNProof2() (*dlnp.Proof, error) {
+func (m *ECKGRound1Message) UnmarshalDLNProof2() (*dlnp.Proof, error) {
 	return dlnp.UnmarshalProof(m.GetDlnproof_2())
 }
 
 // ----- //
 
-func NewKGRound2Message1(
+func NewECKGRound2Message1(
 	to, from *tss.PartyID,
 	share *vss.Share,
 ) tss.ParsedMessage {
@@ -114,25 +114,25 @@ func NewKGRound2Message1(
 		To:          []*tss.PartyID{to},
 		IsBroadcast: false,
 	}
-	content := &KGRound2Message1{
+	content := &ECKGRound2Message1{
 		Share: share.Share.Bytes(),
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *KGRound2Message1) ValidateBasic() bool {
+func (m *ECKGRound2Message1) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyBytes(m.GetShare())
 }
 
-func (m *KGRound2Message1) UnmarshalShare() *big.Int {
+func (m *ECKGRound2Message1) UnmarshalShare() *big.Int {
 	return new(big.Int).SetBytes(m.Share)
 }
 
 // ----- //
 
-func NewKGRound2Message2(
+func NewECKGRound2Message2(
 	from *tss.PartyID,
 	deCommitment cmt.HashDeCommitment,
 ) tss.ParsedMessage {
@@ -141,26 +141,26 @@ func NewKGRound2Message2(
 		IsBroadcast: true,
 	}
 	dcBzs := common.BigIntsToBytes(deCommitment)
-	content := &KGRound2Message2{
+	content := &ECKGRound2Message2{
 		DeCommitment: dcBzs,
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *KGRound2Message2) ValidateBasic() bool {
+func (m *ECKGRound2Message2) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyMultiBytes(m.GetDeCommitment())
 }
 
-func (m *KGRound2Message2) UnmarshalDeCommitment() []*big.Int {
+func (m *ECKGRound2Message2) UnmarshalDeCommitment() []*big.Int {
 	deComBzs := m.GetDeCommitment()
 	return cmt.NewHashDeCommitmentFromBytes(deComBzs)
 }
 
 // ----- //
 
-func NewKGRound3Message(
+func NewECKGRound3Message(
 	from *tss.PartyID,
 	proof paillier.Proof,
 ) tss.ParsedMessage {
@@ -175,19 +175,19 @@ func NewKGRound3Message(
 		}
 		pfBzs[i] = proof[i].Bytes()
 	}
-	content := &KGRound3Message{
+	content := &ECKGRound3Message{
 		PaillierProof: pfBzs,
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *KGRound3Message) ValidateBasic() bool {
+func (m *ECKGRound3Message) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyMultiBytes(m.GetPaillierProof(), paillier.ProofIters)
 }
 
-func (m *KGRound3Message) UnmarshalProofInts() paillier.Proof {
+func (m *ECKGRound3Message) UnmarshalProofInts() paillier.Proof {
 	var pf paillier.Proof
 	proofBzs := m.GetPaillierProof()
 	for i := range pf {

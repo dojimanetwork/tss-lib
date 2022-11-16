@@ -26,8 +26,8 @@ import (
 
 	"github.com/otiai10/primes"
 
-	"github.com/binance-chain/tss-lib/common"
-	crypto2 "github.com/binance-chain/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/common"
+	crypto2 "github.com/dojimanetwork/tss-lib/crypto"
 )
 
 const (

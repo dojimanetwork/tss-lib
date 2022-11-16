@@ -11,7 +11,7 @@ import (
 	"math/big"
 	"sort"
 
-	"github.com/binance-chain/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/common"
 )
 
 type (

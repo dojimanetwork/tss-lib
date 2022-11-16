@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/eddsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/eddsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // Implements Party
@@ -141,13 +141,13 @@ func (p *LocalParty) StoreMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	// switch/case is necessary to store any messages beyond current round
 	// this does not handle message replays. we expect the caller to apply replay and spoofing protection.
 	switch msg.Content().(type) {
-	case *SignRound1Message:
+	case *EDSignRound1Message:
 		p.temp.signRound1Messages[fromPIdx] = msg
 
-	case *SignRound2Message:
+	case *EDSignRound2Message:
 		p.temp.signRound2Messages[fromPIdx] = msg
 
-	case *SignRound3Message:
+	case *EDSignRound3Message:
 		p.temp.signRound3Messages[fromPIdx] = msg
 
 	default: // unrecognised message, just ignore!

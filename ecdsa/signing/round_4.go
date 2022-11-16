@@ -9,7 +9,7 @@ package signing
 import (
 	"errors"
 
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round4) Start() *tss.Error {
@@ -23,7 +23,7 @@ func (round *round4) Start() *tss.Error {
 	Pi := round.PartyID()
 	i := Pi.Index
 
-	r4msg := NewSignRound4Message(Pi, round.temp.deCommit)
+	r4msg := NewECSignRound4Message(Pi, round.temp.deCommit)
 	round.temp.signRound4Messages[i] = r4msg
 	round.out <- r4msg
 	return nil
@@ -43,7 +43,7 @@ func (round *round4) Update() (bool, *tss.Error) {
 }
 
 func (round *round4) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound4Message); ok {
+	if _, ok := msg.Content().(*ECSignRound4Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

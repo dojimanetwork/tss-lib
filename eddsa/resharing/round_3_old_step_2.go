@@ -9,7 +9,7 @@ package resharing
 import (
 	"errors"
 
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round3) Start() *tss.Error {
@@ -32,14 +32,14 @@ func (round *round3) Start() *tss.Error {
 	// 1-2. send share to Pj from the new committee
 	for j, Pj := range round.NewParties().IDs() {
 		share := round.temp.NewShares[j]
-		r3msg1 := NewDGRound3Message1(Pj, round.PartyID(), share)
+		r3msg1 := NewEDDGRound3Message1(Pj, round.PartyID(), share)
 		round.temp.dgRound3Message1s[i] = r3msg1
 		round.out <- r3msg1
 	}
 
 	// 3. broadcast de-commitment to new committees
 	vDeCmt := round.temp.VD
-	r3msg2 := NewDGRound3Message2(
+	r3msg2 := NewEDDGRound3Message2(
 		round.NewParties().IDs().Exclude(round.PartyID()), round.PartyID(),
 		vDeCmt)
 	round.temp.dgRound3Message2s[i] = r3msg2
@@ -49,10 +49,10 @@ func (round *round3) Start() *tss.Error {
 }
 
 func (round *round3) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*DGRound3Message1); ok {
+	if _, ok := msg.Content().(*EDDGRound3Message1); ok {
 		return !msg.IsBroadcast()
 	}
-	if _, ok := msg.Content().(*DGRound3Message2); ok {
+	if _, ok := msg.Content().(*EDDGRound3Message2); ok {
 		return msg.IsBroadcast()
 	}
 	return false

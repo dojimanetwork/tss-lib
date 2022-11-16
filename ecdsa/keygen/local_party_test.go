@@ -20,13 +20,13 @@ import (
 	"github.com/ipfs/go-log"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/dlnp"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/test"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/test"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 const (
@@ -152,7 +152,7 @@ func TestBadMessageCulprits(t *testing.T) {
 		assert.FailNow(t, err.Error())
 	}
 
-	badMsg, _ := NewKGRound1Message(pIDs[1], zero, &paillier.PublicKey{N: zero}, zero, zero, zero, new(dlnp.Proof), new(dlnp.Proof))
+	badMsg, _ := NewECKGRound1Message(pIDs[1], zero, &paillier.PublicKey{N: zero}, zero, zero, zero, new(dlnp.Proof), new(dlnp.Proof))
 	ok, err2 := lp.Update(badMsg)
 	t.Log(err2)
 	assert.False(t, ok)
@@ -162,7 +162,7 @@ func TestBadMessageCulprits(t *testing.T) {
 	assert.Equal(t, 1, len(err2.Culprits()))
 	assert.Equal(t, pIDs[1], err2.Culprits()[0])
 	assert.Equal(t,
-		"task ecdsa-keygen, party {0,P[1]}, round 1, culprits [{1,2}]: message failed ValidateBasic: Type: KGRound1Message, From: {1,2}",
+		"task ecdsa-keygen, party {0,P[1]}, round 1, culprits [{1,2}]: message failed ValidateBasic: Type: ECKGRound1Message, From: {1,2}",
 		err2.Error())
 }
 
@@ -254,7 +254,7 @@ keygen:
 							continue
 						}
 						vssMsgs := P.temp.kgRound2Message1s
-						share := vssMsgs[j].Content().(*KGRound2Message1).Share
+						share := vssMsgs[j].Content().(*ECKGRound2Message1).Share
 						shareStruct := &vss.Share{
 							Threshold: threshold,
 							ID:        P.PartyID().KeyInt(),

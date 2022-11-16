@@ -10,11 +10,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/eddsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/eddsa/keygen"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // round 1 represents round 1 of the signing part of the EDDSA TSS spec
@@ -47,7 +47,7 @@ func (round *round1) Start() *tss.Error {
 	round.temp.deCommit = cmt.D
 
 	// 4. broadcast commitment
-	r1msg2 := NewSignRound1Message(round.PartyID(), cmt.C)
+	r1msg2 := NewEDSignRound1Message(round.PartyID(), cmt.C)
 	round.temp.signRound1Messages[i] = r1msg2
 	round.out <- r1msg2
 
@@ -68,7 +68,7 @@ func (round *round1) Update() (bool, *tss.Error) {
 }
 
 func (round *round1) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*SignRound1Message); ok {
+	if _, ok := msg.Content().(*EDSignRound1Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

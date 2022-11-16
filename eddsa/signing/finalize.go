@@ -14,8 +14,8 @@ import (
 	"github.com/agl/ed25519/edwards25519"
 	"github.com/decred/dcrd/dcrec/edwards/v2"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *finalization) Start() *tss.Error {
@@ -32,7 +32,7 @@ func (round *finalization) Start() *tss.Error {
 		if j == round.PartyID().Index {
 			continue
 		}
-		r3msg := round.temp.signRound3Messages[j].Content().(*SignRound3Message)
+		r3msg := round.temp.signRound3Messages[j].Content().(*EDSignRound3Message)
 		sjBytes := bigIntToEncodedBytes(r3msg.UnmarshalS())
 		var tmpSumS [32]byte
 		edwards25519.ScMulAdd(&tmpSumS, sumS, bigIntToEncodedBytes(big.NewInt(1)), sjBytes)

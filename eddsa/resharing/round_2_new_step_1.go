@@ -9,7 +9,7 @@ package resharing
 import (
 	"errors"
 
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func (round *round2) Start() *tss.Error {
@@ -30,7 +30,7 @@ func (round *round2) Start() *tss.Error {
 	i := Pi.Index
 
 	// 1. "broadcast" "ACK" members of the OLD committee
-	r2msg := NewDGRound2Message(round.OldParties().IDs(), Pi)
+	r2msg := NewEDDGRound2Message(round.OldParties().IDs(), Pi)
 	round.temp.dgRound2Messages[i] = r2msg
 	round.out <- r2msg
 
@@ -38,7 +38,7 @@ func (round *round2) Start() *tss.Error {
 }
 
 func (round *round2) CanAccept(msg tss.ParsedMessage) bool {
-	if _, ok := msg.Content().(*DGRound2Message); ok {
+	if _, ok := msg.Content().(*EDDGRound2Message); ok {
 		return msg.IsBroadcast()
 	}
 	return false

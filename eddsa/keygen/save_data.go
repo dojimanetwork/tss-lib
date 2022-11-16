@@ -11,8 +11,8 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 type (

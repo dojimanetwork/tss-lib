@@ -9,13 +9,13 @@ package resharing
 import (
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	cmt "github.com/binance-chain/tss-lib/crypto/commitments"
-	"github.com/binance-chain/tss-lib/crypto/dlnp"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
-	"github.com/binance-chain/tss-lib/crypto/vss"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/dojimanetwork/tss-lib/common"
+	"github.com/dojimanetwork/tss-lib/crypto"
+	cmt "github.com/dojimanetwork/tss-lib/crypto/commitments"
+	"github.com/dojimanetwork/tss-lib/crypto/dlnp"
+	"github.com/dojimanetwork/tss-lib/crypto/paillier"
+	"github.com/dojimanetwork/tss-lib/crypto/vss"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 // These messages were generated from Protocol Buffers definitions into ecdsa-resharing.pb.go
@@ -23,17 +23,17 @@ import (
 var (
 	// Ensure that signing messages implement ValidateBasic
 	_ = []tss.MessageContent{
-		(*DGRound1Message)(nil),
-		(*DGRound2Message1)(nil),
-		(*DGRound2Message2)(nil),
-		(*DGRound3Message1)(nil),
-		(*DGRound3Message2)(nil),
+		(*ECDGRound1Message)(nil),
+		(*ECDGRound2Message1)(nil),
+		(*ECDGRound2Message2)(nil),
+		(*ECDGRound3Message1)(nil),
+		(*ECDGRound3Message2)(nil),
 	}
 )
 
 // ----- //
 
-func NewDGRound1Message(
+func NewECDGRound1Message(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 	ecdsaPub *crypto.ECPoint,
@@ -45,7 +45,7 @@ func NewDGRound1Message(
 		IsBroadcast:      true,
 		IsToOldCommittee: false,
 	}
-	content := &DGRound1Message{
+	content := &ECDGRound1Message{
 		EcdsaPub:    ecdsaPub.ToProtobufPoint(),
 		VCommitment: vct.Bytes(),
 	}
@@ -53,24 +53,24 @@ func NewDGRound1Message(
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound1Message) ValidateBasic() bool {
+func (m *ECDGRound1Message) ValidateBasic() bool {
 	return m != nil &&
 		m.EcdsaPub != nil &&
 		m.EcdsaPub.ValidateBasic() &&
 		common.NonEmptyBytes(m.VCommitment)
 }
 
-func (m *DGRound1Message) UnmarshalECDSAPub() (*crypto.ECPoint, error) {
+func (m *ECDGRound1Message) UnmarshalECDSAPub() (*crypto.ECPoint, error) {
 	return crypto.NewECPointFromProtobuf(m.GetEcdsaPub())
 }
 
-func (m *DGRound1Message) UnmarshalVCommitment() *big.Int {
+func (m *ECDGRound1Message) UnmarshalVCommitment() *big.Int {
 	return new(big.Int).SetBytes(m.GetVCommitment())
 }
 
 // ----- //
 
-func NewDGRound2Message1(
+func NewECDGRound2Message1(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 	paillierPK *paillier.PublicKey,
@@ -93,7 +93,7 @@ func NewDGRound2Message1(
 	if err != nil {
 		return nil, err
 	}
-	content := &DGRound2Message1{
+	content := &ECDGRound2Message1{
 		PaillierN:     paillierPK.N.Bytes(),
 		PaillierProof: paiPfBzs,
 		NTilde:        NTildei.Bytes(),
@@ -106,7 +106,7 @@ func NewDGRound2Message1(
 	return tss.NewMessage(meta, content, msg), nil
 }
 
-func (m *DGRound2Message1) ValidateBasic() bool {
+func (m *ECDGRound2Message1) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyMultiBytes(m.PaillierProof) &&
 		common.NonEmptyBytes(m.PaillierN) &&
@@ -118,42 +118,42 @@ func (m *DGRound2Message1) ValidateBasic() bool {
 		common.NonEmptyMultiBytes(m.GetDlnproof_2(), 2+(dlnp.Iterations*2))
 }
 
-func (m *DGRound2Message1) UnmarshalPaillierPK() *paillier.PublicKey {
+func (m *ECDGRound2Message1) UnmarshalPaillierPK() *paillier.PublicKey {
 	return &paillier.PublicKey{
 		N: new(big.Int).SetBytes(m.PaillierN),
 	}
 }
 
-func (m *DGRound2Message1) UnmarshalNTilde() *big.Int {
+func (m *ECDGRound2Message1) UnmarshalNTilde() *big.Int {
 	return new(big.Int).SetBytes(m.GetNTilde())
 }
 
-func (m *DGRound2Message1) UnmarshalH1() *big.Int {
+func (m *ECDGRound2Message1) UnmarshalH1() *big.Int {
 	return new(big.Int).SetBytes(m.GetH1())
 }
 
-func (m *DGRound2Message1) UnmarshalH2() *big.Int {
+func (m *ECDGRound2Message1) UnmarshalH2() *big.Int {
 	return new(big.Int).SetBytes(m.GetH2())
 }
 
-func (m *DGRound2Message1) UnmarshalPaillierProof() paillier.Proof {
+func (m *ECDGRound2Message1) UnmarshalPaillierProof() paillier.Proof {
 	var pf paillier.Proof
 	ints := common.ByteSlicesToBigInts(m.PaillierProof)
 	copy(pf[:], ints[:paillier.ProofIters])
 	return pf
 }
 
-func (m *DGRound2Message1) UnmarshalDLNProof1() (*dlnp.Proof, error) {
+func (m *ECDGRound2Message1) UnmarshalDLNProof1() (*dlnp.Proof, error) {
 	return dlnp.UnmarshalProof(m.GetDlnproof_1())
 }
 
-func (m *DGRound2Message1) UnmarshalDLNProof2() (*dlnp.Proof, error) {
+func (m *ECDGRound2Message1) UnmarshalDLNProof2() (*dlnp.Proof, error) {
 	return dlnp.UnmarshalProof(m.GetDlnproof_2())
 }
 
 // ----- //
 
-func NewDGRound2Message2(
+func NewECDGRound2Message2(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 ) tss.ParsedMessage {
@@ -163,18 +163,18 @@ func NewDGRound2Message2(
 		IsBroadcast:      true,
 		IsToOldCommittee: true,
 	}
-	content := &DGRound2Message2{}
+	content := &ECDGRound2Message2{}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound2Message2) ValidateBasic() bool {
+func (m *ECDGRound2Message2) ValidateBasic() bool {
 	return true
 }
 
 // ----- //
 
-func NewDGRound3Message1(
+func NewECDGRound3Message1(
 	to *tss.PartyID,
 	from *tss.PartyID,
 	share *vss.Share,
@@ -185,21 +185,21 @@ func NewDGRound3Message1(
 		IsBroadcast:      false,
 		IsToOldCommittee: false,
 	}
-	content := &DGRound3Message1{
+	content := &ECDGRound3Message1{
 		Share: share.Share.Bytes(),
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound3Message1) ValidateBasic() bool {
+func (m *ECDGRound3Message1) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyBytes(m.Share)
 }
 
 // ----- //
 
-func NewDGRound3Message2(
+func NewECDGRound3Message2(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 	vdct cmt.HashDeCommitment,
@@ -211,26 +211,26 @@ func NewDGRound3Message2(
 		IsToOldCommittee: false,
 	}
 	vDctBzs := common.BigIntsToBytes(vdct)
-	content := &DGRound3Message2{
+	content := &ECDGRound3Message2{
 		VDecommitment: vDctBzs,
 	}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound3Message2) ValidateBasic() bool {
+func (m *ECDGRound3Message2) ValidateBasic() bool {
 	return m != nil &&
 		common.NonEmptyMultiBytes(m.VDecommitment)
 }
 
-func (m *DGRound3Message2) UnmarshalVDeCommitment() cmt.HashDeCommitment {
+func (m *ECDGRound3Message2) UnmarshalVDeCommitment() cmt.HashDeCommitment {
 	deComBzs := m.GetVDecommitment()
 	return cmt.NewHashDeCommitmentFromBytes(deComBzs)
 }
 
 // ----- //
 
-func NewDGRound4Message(
+func NewECDGRound4Message(
 	to []*tss.PartyID,
 	from *tss.PartyID,
 ) tss.ParsedMessage {
@@ -240,11 +240,11 @@ func NewDGRound4Message(
 		IsBroadcast:             true,
 		IsToOldAndNewCommittees: true,
 	}
-	content := &DGRound4Message{}
+	content := &ECDGRound4Message{}
 	msg := tss.NewMessageWrapper(meta, content)
 	return tss.NewMessage(meta, content, msg)
 }
 
-func (m *DGRound4Message) ValidateBasic() bool {
+func (m *ECDGRound4Message) ValidateBasic() bool {
 	return true
 }

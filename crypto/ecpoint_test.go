@@ -11,8 +11,8 @@ import (
 	"reflect"
 	"testing"
 
-	. "github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/tss"
+	. "github.com/dojimanetwork/tss-lib/crypto"
+	"github.com/dojimanetwork/tss-lib/tss"
 )
 
 func TestFlattenECPoints(t *testing.T) {
