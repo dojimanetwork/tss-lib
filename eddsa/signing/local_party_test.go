@@ -54,7 +54,7 @@ func TestE2EConcurrent(t *testing.T) {
 
 	errCh := make(chan *tss.Error, len(signPIDs))
 	outCh := make(chan tss.Message, len(signPIDs))
-	endCh := make(chan *SignatureData, len(signPIDs))
+	endCh := make(chan *EDSignatureData, len(signPIDs))
 
 	updater := test.SharedPartyUpdater
 

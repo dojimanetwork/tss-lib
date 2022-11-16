@@ -32,7 +32,7 @@ const (
 // -----
 
 // FinalizeGetOurSigShare is called in one-round signing mode after the online rounds have finished to compute s_i.
-func FinalizeGetOurSigShare(state *SignatureData, msg *big.Int) (sI *big.Int) {
+func FinalizeGetOurSigShare(state *ECSignatureData, msg *big.Int) (sI *big.Int) {
 	data := state.GetOneRoundData()
 
 	N := tss.EC().Params().N
@@ -46,13 +46,13 @@ func FinalizeGetOurSigShare(state *SignatureData, msg *big.Int) (sI *big.Int) {
 // FinalizeGetOurSigShare is called in one-round signing mode to build a final signature given others' s_i shares and a msg.
 // Note: each P in otherPs should correspond with that P's s_i at the same index in otherSIs.
 func FinalizeGetAndVerifyFinalSig(
-	state *SignatureData,
+	state *ECSignatureData,
 	pk *ecdsa.PublicKey,
 	msg *big.Int,
 	ourP *tss.PartyID,
 	ourSI *big.Int,
 	otherSIs map[*tss.PartyID]*big.Int,
-) (*SignatureData, *btcec.Signature, *tss.Error) {
+) (*ECSignatureData, *btcec.Signature, *tss.Error) {
 	if len(otherSIs) == 0 {
 		return nil, nil, FinalizeWrapError(errors.New("len(otherSIs) == 0"), ourP)
 	}

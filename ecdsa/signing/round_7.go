@@ -175,7 +175,7 @@ func (round *round7) Start() *tss.Error {
 	// PRE-PROCESSING FINISHED
 	// If we are in one-round signing mode (msg is nil), we will exit out with the current state here and we are done.
 	round.temp.T = int32(len(round.Parties().IDs()) - 1)
-	round.data.OneRoundData = &round.temp.SignatureData_OneRoundData
+	round.data.OneRoundData = &round.temp.ECSignatureData_OneRoundData
 	if round.temp.m == nil {
 		round.end <- round.data
 		for j := range round.ok {

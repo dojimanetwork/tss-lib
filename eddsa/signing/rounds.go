@@ -19,10 +19,10 @@ type (
 	base struct {
 		*tss.Parameters
 		key     *keygen.LocalPartySaveData
-		data    *SignatureData
+		data    *EDSignatureData
 		temp    *localTempData
 		out     chan<- tss.Message
-		end     chan<- *SignatureData
+		end     chan<- *EDSignatureData
 		ok      []bool // `ok` tracks parties which have been verified by Update()
 		started bool
 		number  int
