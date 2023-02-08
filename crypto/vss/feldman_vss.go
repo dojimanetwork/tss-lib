@@ -40,7 +40,7 @@ var (
 	one  = big.NewInt(1)
 )
 
-// Check share ids of Shamir's Secret Sharing, return error if duplicate or 0 value found
+// CheckIndexes Check share ids of Shamir's Secret Sharing, return error if duplicate or 0 value found
 func CheckIndexes(ec elliptic.Curve, indexes []*big.Int) ([]*big.Int, error) {
 	visited := make(map[string]struct{})
 	for _, v := range indexes {
@@ -57,9 +57,8 @@ func CheckIndexes(ec elliptic.Curve, indexes []*big.Int) ([]*big.Int, error) {
 	return indexes, nil
 }
 
-// Returns a new array of secret shares created by Shamir's Secret Sharing Algorithm,
+// Create Returns a new array of secret shares created by Shamir's Secret Sharing Algorithm,
 // requiring a minimum number of shares to recreate, of length shares, from the input secret
-//
 func Create(threshold int, secret *big.Int, indexes []*big.Int) (Vs, Shares, error) {
 	if secret == nil || indexes == nil {
 		return nil, nil, fmt.Errorf("vss secret or indexes == nil: %v %v", secret, indexes)
@@ -157,8 +156,8 @@ func samplePolynomial(threshold int, secret *big.Int) []*big.Int {
 
 // Evauluates a polynomial with coefficients such that:
 // evaluatePolynomial([a, b, c, d], x):
-// 		returns a + bx + cx^2 + dx^3
 //
+//	returns a + bx + cx^2 + dx^3
 func evaluatePolynomial(threshold int, v []*big.Int, id *big.Int) (result *big.Int) {
 	q := tss.EC().Params().N
 	modQ := common.ModInt(q)

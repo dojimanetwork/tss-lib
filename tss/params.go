@@ -35,7 +35,7 @@ const (
 	defaultSafePrimeGenTimeout = 5 * time.Minute
 )
 
-// Exported, used in `tss` client
+// NewParameters Exported, used in `tss` client
 func NewParameters(ctx *PeerContext, partyID *PartyID, partyCount, threshold int, optionalSafePrimeGenTimeout ...time.Duration) *Parameters {
 	var safePrimeGenTimeout time.Duration
 	if 0 < len(optionalSafePrimeGenTimeout) {

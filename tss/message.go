@@ -63,7 +63,7 @@ type (
 		IsToOldAndNewCommittees bool
 	}
 
-	// Implements ParsedMessage; this is a concrete implementation of what messages produced by a LocalParty look like
+	// MessageImpl Implements ParsedMessage; this is a concrete implementation of what messages produced by a LocalParty look like
 	MessageImpl struct {
 		MessageRouting
 		content MessageContent

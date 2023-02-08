@@ -10,7 +10,7 @@ import (
 	"fmt"
 )
 
-// Represents an error that occurred during execution of the TSS protocol rounds.
+// Error Represents an error that occurred during execution of the TSS protocol rounds.
 type Error struct {
 	cause    error
 	task     string

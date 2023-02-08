@@ -139,7 +139,7 @@ func BaseStart(p Party, task string, prepare ...func(Round) *Error) *Error {
 	return p.round().Start()
 }
 
-// an implementation of Update that is shared across the different types of parties (keygen, signing, dynamic groups)
+// BaseUpdate an implementation of Update that is shared across the different types of parties (keygen, signing, dynamic groups)
 func BaseUpdate(p Party, msg ParsedMessage, task string) (ok bool, err *Error) {
 	// fast-fail on an invalid message; do not lock the mutex yet
 	if _, err := p.ValidateMessage(msg); err != nil {

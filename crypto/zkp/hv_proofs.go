@@ -16,13 +16,13 @@ import (
 )
 
 type (
-	// ZK proof of knowledge of sigma_i, l_i such that T_i = g^sigma_i, h^l_i (GG20)
+	// TProof ZK proof of knowledge of sigma_i, l_i such that T_i = g^sigma_i, h^l_i (GG20)
 	TProof struct {
 		Alpha *crypto.ECPoint
 		T, U  *big.Int
 	}
 
-	// ZK proof for knowledge of sigma_i, l_i such that S_i = R^sigma_i, T_i = g^sigma_i h^l_i (GG20)
+	// STProof ZK proof for knowledge of sigma_i, l_i such that S_i = R^sigma_i, T_i = g^sigma_i h^l_i (GG20)
 	STProof struct {
 		Alpha, Beta *crypto.ECPoint
 		T, U        *big.Int

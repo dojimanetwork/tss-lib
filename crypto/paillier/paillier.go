@@ -63,7 +63,7 @@ func init() {
 	_ = primes.Globally.Until(verifyPrimesUntil)
 }
 
-// len is the length of the modulus (each prime = len / 2)
+// GenerateKeyPair len is the length of the modulus (each prime = len / 2)
 func GenerateKeyPair(modulusBitLen int, timeout time.Duration, optionalConcurrency ...int) (privateKey *PrivateKey, publicKey *PublicKey, err error) {
 	var concurrency int
 	if 0 < len(optionalConcurrency) {

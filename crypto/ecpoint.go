@@ -37,7 +37,7 @@ var (
 	eightInv = new(big.Int).ModInverse(eight, edwards.Edwards().Params().N)
 )
 
-// Creates a new ECPoint and checks that the given coordinates are on the elliptic curve.
+// NewECPoint Creates a new ECPoint and checks that the given coordinates are on the elliptic curve.
 func NewECPoint(curve elliptic.Curve, X, Y *big.Int) (*ECPoint, error) {
 	if !isOnCurve(curve, X, Y) {
 		return nil, fmt.Errorf("NewECPoint: the given point is not on the elliptic curve")
@@ -45,7 +45,7 @@ func NewECPoint(curve elliptic.Curve, X, Y *big.Int) (*ECPoint, error) {
 	return &ECPoint{curve, [2]*big.Int{X, Y}, 1}, nil
 }
 
-// Creates a new ECPoint without checking that the coordinates are on the elliptic curve.
+// NewECPointNoCurveCheck Creates a new ECPoint without checking that the coordinates are on the elliptic curve.
 // Only use this function when you are completely sure that the point is already on the curve.
 func NewECPointNoCurveCheck(curve elliptic.Curve, X, Y *big.Int) *ECPoint {
 	return &ECPoint{curve, [2]*big.Int{X, Y}, 0}
@@ -342,7 +342,7 @@ func (p *ECPoint) GobDecode(buf []byte) error {
 
 // ----- //
 
-// crypto.ECPoint is not inherently json marshal-able
+// MarshalJSON crypto.ECPoint is not inherently json marshal-able
 func (p *ECPoint) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		Coords [2]*big.Int

@@ -10,4 +10,4 @@ import (
 	"github.com/ipfs/go-log"
 )
 
-var Logger = log.Logger("tss-lib")
+var Logger = log.Logger("dojima-tss-lib")

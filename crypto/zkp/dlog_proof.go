@@ -16,7 +16,7 @@ import (
 )
 
 type (
-	// Schnorr ZK of the discrete logarithm of pho_i such that A = g^pho (GG18)
+	// DLogProof Schnorr ZK of the discrete logarithm of pho_i such that A = g^pho (GG18)
 	DLogProof struct {
 		Alpha *crypto.ECPoint
 		T     *big.Int
@@ -46,7 +46,7 @@ func NewDLogProof(x *big.Int, X *crypto.ECPoint) (*DLogProof, error) {
 	return &DLogProof{Alpha: alpha, T: t}, nil
 }
 
-// NewDLogProof verifies a new Schnorr ZK proof of knowledge of the discrete logarithm (GG18Spec Fig. 16)
+// Verify NewDLogProof verifies a new Schnorr ZK proof of knowledge of the discrete logarithm (GG18Spec Fig. 16)
 func (pf *DLogProof) Verify(X *crypto.ECPoint) bool {
 	if pf == nil || !pf.ValidateBasic() {
 		return false

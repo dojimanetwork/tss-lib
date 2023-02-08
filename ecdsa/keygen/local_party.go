@@ -54,7 +54,7 @@ type (
 	}
 )
 
-// Exported, used in `tss` client
+// NewLocalParty Exported, used in `tss` client
 func NewLocalParty(
 	params *tss.Parameters,
 	out chan<- tss.Message,
@@ -148,7 +148,7 @@ func (p *LocalParty) StoreMessage(msg tss.ParsedMessage) (bool, *tss.Error) {
 	return true, nil
 }
 
-// recovers a party's original index in the set of parties during keygen
+// OriginalIndex recovers a party's original index in the set of parties during keygen
 func (save LocalPartySaveData) OriginalIndex() (int, error) {
 	index := -1
 	ki := save.ShareID
