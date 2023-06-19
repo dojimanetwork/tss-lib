@@ -7,6 +7,7 @@
 package common
 
 import (
+	"fmt"
 	"math/big"
 	"runtime"
 	"testing"
@@ -16,8 +17,9 @@ import (
 )
 
 func Test_getSafePrime(t *testing.T) {
-	prime := new(big.Int).SetInt64(5)
+	prime := new(big.Int).SetInt64(80000)
 	sPrime := getSafePrime(prime)
+	fmt.Println("prime", prime, "safeprime", sPrime)
 	assert.True(t, sPrime.ProbablyPrime(50))
 }
 
@@ -42,7 +44,8 @@ func Test_Validate_Bad(t *testing.T) {
 }
 
 func TestGetRandomGermainPrimeConcurrent(t *testing.T) {
-	sgps, err := GetRandomSafePrimesConcurrent(1024, 2, 20*time.Minute, runtime.NumCPU())
+	sgps, err := GetRandomSafePrimesConcurrent(2048, 2, 20*time.Minute, runtime.NumCPU())
+	fmt.Println(sgps[0].Prime().String())
 	assert.NoError(t, err)
 	assert.Equal(t, 2, len(sgps))
 	for _, sgp := range sgps {

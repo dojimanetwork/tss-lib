@@ -26,7 +26,7 @@ type (
 	ProofBob struct {
 		Z, ZPrm, T, V, W, S, S1, S2, T1, T2 *big.Int
 	}
-
+	// ProofBobWC proof bob with check
 	ProofBobWC struct {
 		*ProofBob
 		U *crypto.ECPoint
@@ -40,58 +40,58 @@ func ProveBobWC(pk *paillier.PublicKey, NTilde, h1, h2, c1, c2, x, y, r *big.Int
 		return nil, errors.New("ProveBob() received a nil argument")
 	}
 
-	NSq := pk.NSquare()
+	NSq := pk.NSquare() // pk.N^2
 
-	q := tss.EC().Params().N
+	q := tss.EC().Params().N // q
 	q3 := new(big.Int).Mul(q, q)
-	q3.Mul(q3, q)
-	qNTilde := new(big.Int).Mul(q, NTilde)
-	q3NTilde := new(big.Int).Mul(q3, NTilde)
+	q3.Mul(q3, q)                            // q^3
+	qNTilde := new(big.Int).Mul(q, NTilde)   // q*~N
+	q3NTilde := new(big.Int).Mul(q3, NTilde) // ~N*q^3
 
 	// steps are numbered as shown in Fig. 10, but diverge slightly for Fig. 11
 	// 1.
-	alpha := common.GetRandomPositiveInt(q3)
+	alpha := common.GetRandomPositiveInt(q3) // random int(q^3) = aplha
 
 	// 2.
-	rho := common.GetRandomPositiveInt(qNTilde)
-	sigma := common.GetRandomPositiveInt(qNTilde)
-	tau := common.GetRandomPositiveInt(qNTilde)
+	rho := common.GetRandomPositiveInt(qNTilde)   // rand int(~N) = rho
+	sigma := common.GetRandomPositiveInt(qNTilde) // rand int(q*~N) = sigma
+	tau := common.GetRandomPositiveInt(qNTilde)   // rand int (q*~N) = tau
 
 	// 3.
-	rhoPrm := common.GetRandomPositiveInt(q3NTilde)
+	rhoPrm := common.GetRandomPositiveInt(q3NTilde) // rhoprm = ri(q^3*~N)
 
 	// 4.
-	beta := common.GetRandomPositiveRelativelyPrimeInt(pk.N)
-	gamma := common.GetRandomPositiveRelativelyPrimeInt(pk.N)
+	beta := common.GetRandomPositiveRelativelyPrimeInt(pk.N)  // rpi(pk.N) = beta
+	gamma := common.GetRandomPositiveRelativelyPrimeInt(pk.N) // rpi(pk.N) = gamma
 
 	// 5.
-	u := crypto.NewECPointNoCurveCheck(tss.EC(), zero, zero) // initialization suppresses an IDE warning
+	u := crypto.NewECPointNoCurveCheck(tss.EC(), zero, zero) //
 	if X != nil {
-		u = crypto.ScalarBaseMult(tss.EC(), alpha)
+		u = crypto.ScalarBaseMult(tss.EC(), alpha) // new ecpoint
 	}
 
 	// 6.
-	modNTilde := common.ModInt(NTilde)
-	z := modNTilde.Exp(h1, x)
-	z = modNTilde.Mul(z, modNTilde.Exp(h2, rho))
+	modNTilde := common.ModInt(NTilde)           // |~N|
+	z := modNTilde.Exp(h1, x)                    // h1^x mod |N| = z
+	z = modNTilde.Mul(z, modNTilde.Exp(h2, rho)) // z = z * (h2^rho) mod N
 
 	// 7.
-	zPrm := modNTilde.Exp(h1, alpha)
-	zPrm = modNTilde.Mul(zPrm, modNTilde.Exp(h2, rhoPrm))
+	zPrm := modNTilde.Exp(h1, alpha)                      // h1 ^ alpha mod N
+	zPrm = modNTilde.Mul(zPrm, modNTilde.Exp(h2, rhoPrm)) // zprm = zprm * h2 ^ rhoPrm mod N
 
 	// 8.
-	t := modNTilde.Exp(h1, y)
-	t = modNTilde.Mul(t, modNTilde.Exp(h2, sigma))
+	t := modNTilde.Exp(h1, y)                      // h1 ^ y = t
+	t = modNTilde.Mul(t, modNTilde.Exp(h2, sigma)) // t = t * h2 ^ sigma
 
 	// 9.
-	modNSq := common.ModInt(NSq)
-	v := modNSq.Exp(c1, alpha)
-	v = modNSq.Mul(v, modNSq.Exp(pk.Gamma(), gamma))
-	v = modNSq.Mul(v, modNSq.Exp(beta, pk.N))
+	modNSq := common.ModInt(NSq)                     // |N^2|
+	v := modNSq.Exp(c1, alpha)                       // c1^alpha = v
+	v = modNSq.Mul(v, modNSq.Exp(pk.Gamma(), gamma)) //  v = pk ^ gamma * v
+	v = modNSq.Mul(v, modNSq.Exp(beta, pk.N))        // v  = v * beta^ pk.N
 
 	// 10.
-	w := modNTilde.Exp(h1, gamma)
-	w = modNTilde.Mul(w, modNTilde.Exp(h2, tau))
+	w := modNTilde.Exp(h1, gamma)                // h1^gamma = w
+	w = modNTilde.Mul(w, modNTilde.Exp(h2, tau)) // h2^tau * w = w
 
 	// 11-12. e'
 	var e *big.Int
@@ -107,25 +107,25 @@ func ProveBobWC(pk *paillier.PublicKey, NTilde, h1, h2, c1, c2, x, y, r *big.Int
 	}
 
 	// 13.
-	modN := common.ModInt(pk.N)
-	s := modN.Exp(r, e)
-	s = modN.Mul(s, beta)
+	modN := common.ModInt(pk.N) // | pk.N |
+	s := modN.Exp(r, e)         // s = r ^ e
+	s = modN.Mul(s, beta)       // s = s ^ beta
 
 	// 14.
-	s1 := new(big.Int).Mul(e, x)
-	s1 = s1.Add(s1, alpha)
+	s1 := new(big.Int).Mul(e, x) // s1 = e * x
+	s1 = s1.Add(s1, alpha)       // s1 = s1 + alpha
 
 	// 15.
-	s2 := new(big.Int).Mul(e, rho)
-	s2 = s2.Add(s2, rhoPrm)
+	s2 := new(big.Int).Mul(e, rho) // s2 = e * rho
+	s2 = s2.Add(s2, rhoPrm)        // s2 = s2 * rhoPrm
 
 	// 16.
-	t1 := new(big.Int).Mul(e, y)
-	t1 = t1.Add(t1, gamma)
+	t1 := new(big.Int).Mul(e, y) // t1 = e * y
+	t1 = t1.Add(t1, gamma)       // t1 = t1 + gamma
 
 	// 17.
-	t2 := new(big.Int).Mul(e, sigma)
-	t2 = t2.Add(t2, tau)
+	t2 := new(big.Int).Mul(e, sigma) // t2 = e * sigma
+	t2 = t2.Add(t2, tau)             // t2 = t2 * tau
 
 	// the regular Bob proof ("without check") is extracted and returned by ProveBob
 	pf := &ProofBob{Z: z, ZPrm: zPrm, T: t, V: v, W: w, S: s, S1: s1, S2: s2, T1: t1, T2: t2}

@@ -7,6 +7,7 @@
 package signing
 
 import (
+	crypto_ed25519 "crypto/ed25519"
 	"errors"
 	"fmt"
 	"math/big"
@@ -40,9 +41,10 @@ func (round *finalization) Start() *tss.Error {
 	}
 	s := encodedBytesToBigInt(sumS)
 
+	fullSig := append(bigIntToEncodedBytes(round.temp.r)[:], sumS[:]...)
 	// save the signature for final output
 	signature := new(common.ECSignature)
-	signature.Signature = append(bigIntToEncodedBytes(round.temp.r)[:], sumS[:]...)
+	signature.Signature = fullSig
 	signature.R = round.temp.r.Bytes()
 	signature.S = s.Bytes()
 	signature.M = round.temp.m.Bytes()
@@ -53,9 +55,10 @@ func (round *finalization) Start() *tss.Error {
 		X:     round.key.EDDSAPub.X(),
 		Y:     round.key.EDDSAPub.Y(),
 	}
-
-	ok := edwards.Verify(&pk, round.temp.m.Bytes(), round.temp.r, s)
-	if !ok {
+	msg_v := round.temp.m.Bytes()
+	dcrec_ok := edwards.Verify(&pk, msg_v, round.temp.r, s)
+	crypto_ok := crypto_ed25519.Verify(pk.SerializeUncompressed(), msg_v, fullSig)
+	if !dcrec_ok && !crypto_ok {
 		return round.WrapError(fmt.Errorf("signature verification failed"))
 	}
 	round.end <- round.data

@@ -33,22 +33,22 @@ var (
 )
 
 func NewProof(h1, h2, x, p, q, N *big.Int) *Proof {
-	pMulQ := new(big.Int).Mul(p, q)
-	modN, modPQ := common.ModInt(N), common.ModInt(pMulQ)
-	a := make([]*big.Int, Iterations)
-	alpha := [Iterations]*big.Int{}
+	pMulQ := new(big.Int).Mul(p, q)                       // p*q
+	modN, modPQ := common.ModInt(N), common.ModInt(pMulQ) // |N|, |PQ|
+	a := make([]*big.Int, Iterations)                     // a[128]
+	alpha := [Iterations]*big.Int{}                       // alpha[128]
 	for i := range alpha {
-		a[i] = common.GetRandomPositiveInt(pMulQ)
-		alpha[i] = modN.Exp(h1, a[i])
+		a[i] = common.GetRandomPositiveInt(pMulQ) // rand int of pq
+		alpha[i] = modN.Exp(h1, a[i])             // h^a[i]
 	}
-	msg := append([]*big.Int{h1, h2, N}, alpha[:]...)
+	msg := append([]*big.Int{h1, h2, N}, alpha[:]...) // []
 	c := common.SHA512_256i(msg...)
 	t := [Iterations]*big.Int{}
 	cIBI := new(big.Int)
 	for i := range t {
 		cI := c.Bit(i)
-		cIBI = cIBI.SetInt64(int64(cI))
-		t[i] = modPQ.Add(a[i], modPQ.Mul(cIBI, x))
+		cIBI = cIBI.SetInt64(int64(cI))            //
+		t[i] = modPQ.Add(a[i], modPQ.Mul(cIBI, x)) //  a[i]  + cIBI mod x |pq|
 	}
 	return &Proof{alpha, t}
 }

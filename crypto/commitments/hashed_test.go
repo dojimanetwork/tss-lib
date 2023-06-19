@@ -7,6 +7,7 @@
 package commitments_test
 
 import (
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -20,6 +21,7 @@ func TestCreateVerify(t *testing.T) {
 	zero := big.NewInt(0)
 
 	commitment := NewHashCommitment(zero, one)
+	fmt.Println(commitment.D)
 	pass := commitment.Verify()
 
 	assert.True(t, pass, "must pass")

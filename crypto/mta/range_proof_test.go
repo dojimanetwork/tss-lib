@@ -7,6 +7,7 @@
 package mta
 
 import (
+	"fmt"
 	"math/big"
 	"testing"
 	"time"
@@ -26,7 +27,7 @@ const (
 
 func TestProveRangeAlice(t *testing.T) {
 	q := tss.EC().Params().N
-
+	fmt.Println(q)
 	sk, pk, err := paillier.GenerateKeyPair(testPaillierKeyLength, 10*time.Minute)
 	assert.NoError(t, err)
 
@@ -38,6 +39,7 @@ func TestProveRangeAlice(t *testing.T) {
 	NTildei, h1i, h2i, err := crypto.GenerateNTildei(primes)
 	assert.NoError(t, err)
 	proof, err := ProveRangeAlice(pk, c, NTildei, h1i, h2i, m, r)
+	fmt.Println(proof)
 	assert.NoError(t, err)
 
 	ok := proof.Verify(pk, NTildei, h1i, h2i, c)

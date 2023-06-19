@@ -29,7 +29,7 @@ const (
 )
 
 func setUp(level string) {
-	if err := log.SetLogLevel("tss-lib", level); err != nil {
+	if err := log.SetLogLevel("dojima-tss-lib", level); err != nil {
 		panic(err)
 	}
 }

@@ -20,7 +20,7 @@ import (
 )
 
 // Implements Party
-// Implements Stringer
+// Implements
 var _ tss.Party = (*LocalParty)(nil)
 var _ fmt.Stringer = (*LocalParty)(nil)
 
@@ -91,7 +91,7 @@ type (
 	}
 )
 
-// Constructs a new ECDSA signing party. Note: msg may be left nil for one-round signing mode to only do the pre-processing steps.
+// NewLocalParty Constructs a new ECDSA signing party. Note: msg may be left nil for one-round signing mode to only do the pre-processing steps.
 func NewLocalParty(
 	msg *big.Int,
 	params *tss.Parameters,
@@ -134,7 +134,7 @@ func NewLocalParty(
 	return p
 }
 
-// Constructs a new ECDSA signing party for one-round signing. The final SignatureData struct will be a partial struct containing only the data for a final signing round (see the readme).
+// NewLocalPartyWithOneRoundSign Constructs a new ECDSA signing party for one-round signing. The final SignatureData struct will be a partial struct containing only the data for a final signing round (see the readme).
 func NewLocalPartyWithOneRoundSign(
 	params *tss.Parameters,
 	key keygen.LocalPartySaveData,

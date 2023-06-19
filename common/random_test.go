@@ -7,6 +7,7 @@
 package common_test
 
 import (
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -21,12 +22,15 @@ const (
 
 func TestGetRandomInt(t *testing.T) {
 	rnd := common.MustGetRandomInt(randomIntBitLen)
+	fmt.Println(rnd.String())
 	assert.NotZero(t, rnd, "rand int should not be zero")
 }
 
 func TestGetRandomPositiveInt(t *testing.T) {
 	rnd := common.MustGetRandomInt(randomIntBitLen)
 	rndPos := common.GetRandomPositiveInt(rnd)
+	fmt.Println("rnd", rnd.String())
+	fmt.Println("rndPos", rndPos.String())
 	assert.NotZero(t, rndPos, "rand int should not be zero")
 	assert.True(t, rndPos.Cmp(big.NewInt(0)) == 1, "rand int should be positive")
 }
@@ -34,6 +38,8 @@ func TestGetRandomPositiveInt(t *testing.T) {
 func TestGetRandomPositiveRelativelyPrimeInt(t *testing.T) {
 	rnd := common.MustGetRandomInt(randomIntBitLen)
 	rndPosRP := common.GetRandomPositiveRelativelyPrimeInt(rnd)
+	fmt.Println("rnd", rnd.String())
+	fmt.Println("rndPos", rndPosRP.String())
 	assert.NotZero(t, rndPosRP, "rand int should not be zero")
 	assert.True(t, common.IsNumberInMultiplicativeGroup(rnd, rndPosRP))
 	assert.True(t, rndPosRP.Cmp(big.NewInt(0)) == 1, "rand int should be positive")
